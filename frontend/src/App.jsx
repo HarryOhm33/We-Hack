@@ -11,6 +11,7 @@ import AllJobs from "./pages/AllJobs";
 import RecruiterDashboard from "./pages/RecruiterDashboard";
 import JobDetails from "./pages/JobDetails";
 import PostJob from "./pages/PostJob";
+import ViewApplications from "./pages/ViewApplications";
 // Import other pages as needed
 
 function App() {
@@ -34,6 +35,10 @@ function App() {
                 element={<RecruiterDashboard />}
               />
               {/* Add other routes */}
+              <Route
+                path="/:jobId/applications"
+                element={<ViewApplications />}
+              />
             </Routes>
           </main>
 
