@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import BackgroundAnimation from "../components/LandingPage/BackgroundAnimation";
+import Background from "../components/LandingPage/BackgroundAnimation";
 import toast from "react-hot-toast";
 
 const VerifyOTP = () => {
@@ -48,7 +48,7 @@ const VerifyOTP = () => {
 
   return (
     <div className="min-h-screen relative flex items-center justify-center p-4">
-      <BackgroundAnimation />
+      <Background />
 
       <div className="relative z-10 bg-gray-900 bg-opacity-90 backdrop-blur-sm rounded-2xl p-8 max-w-md w-full shadow-xl border border-gray-800">
         <h2 className="text-3xl font-bold text-center mb-8 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">

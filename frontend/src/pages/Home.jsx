@@ -1,5 +1,5 @@
 import React from "react";
-import Background from "../components/LandingPage/Background";
+import Background from "../components/LandingPage/BackgroundAnimation";
 import CTA from "../components/LandingPage/CTA";
 import FeaturesOverview from "../components/LandingPage/FeaturesOverview";
 import Footer from "../components/LandingPage/Footer";
