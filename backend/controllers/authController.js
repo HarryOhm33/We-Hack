@@ -64,35 +64,57 @@ exports.signup = async (req, res) => {
 };
 
 module.exports.login = async (req, res) => {
-  const { email, password } = req.body;
-  const user = await User.findOne({ email });
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
 
-  if (!user)
-    return res.status(400).json({ message: "User not found, SignUp First!!" });
-  if (!user.isVerified)
-    return res
-      .status(403)
-      .json({ message: "Please verify your account first." });
+    if (!user) {
+      return res
+        .status(400)
+        .json({ message: "User not found, SignUp First!!" });
+    }
 
-  const isMatch = await bcrypt.compare(password, user.password);
-  if (!isMatch) return res.status(400).json({ message: "Incorrect password" });
+    if (!user.isVerified) {
+      return res
+        .status(403)
+        .json({ message: "Please verify your account first." });
+    }
 
-  // ✅ Generate JWT Token
-  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-    expiresIn: "7d",
-  });
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: "Incorrect password" });
+    }
 
-  // ✅ Store session in MongoDB
-  await Session.create({ userId: user._id, token });
+    // ✅ Generate JWT Token
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
 
-  // ✅ Set token in HTTP-only cookies
-  res.cookie("token", token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-  });
+    // ✅ Store session in MongoDB
+    await Session.create({ userId: user._id, token });
 
-  res.status(200).json({ message: "Login successful" });
+    // ✅ Set token in HTTP-only cookies
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    });
+
+    // ✅ Return important user details
+    res.status(200).json({
+      message: "Login successful",
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        organization: user.organization || null, // Include only if recruiter
+      },
+      token, // (Optional) if you also want to return the token for frontend storage
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
 };
 
 module.exports.logout = async (req, res) => {
