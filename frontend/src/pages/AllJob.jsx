@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
+import Background from "../components/BackgroundAnimation";
 
 const AllJobs = () => {
   const [jobs, setJobs] = useState([]);
@@ -51,6 +52,7 @@ const AllJobs = () => {
 
   return (
     <div className="min-h-screen bg-gray-900 flex flex-col items-center py-8">
+        <Background />
       <div className="max-w-7xl w-full px-6">
         
         {/* Updated Heading with Gradient Color */}
