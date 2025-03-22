@@ -13,13 +13,21 @@ function App() {
   return (
     <Router>
       <AuthProvider>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/verify" element={<VerifyOTP />} />
-          <Route path="/login" element={<Login />} />
-          {/* Add other routes */}
-        </Routes>
+        <div className="min-h-screen flex flex-col">
+          <Navbar />
+
+          <main className="flex-grow">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/verify" element={<VerifyOTP />} />
+              <Route path="/login" element={<Login />} />
+              {/* Add other routes */}
+            </Routes>
+          </main>
+
+          <Footer />
+        </div>
       </AuthProvider>
     </Router>
   );
