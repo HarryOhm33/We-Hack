@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import Background from "../components/BackgroundAnimation";
+import Background from "../BackgroundAnimation";
 import { useAuth } from "../context/AuthContext";
 
 const Signup = () => {

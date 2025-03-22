@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
-import Background from "../components/BackgroundAnimation";
 import toast from "react-hot-toast";
+import { useLocation, useNavigate } from "react-router-dom";
+import Background from "../BackgroundAnimation";
+import { useAuth } from "../context/AuthContext";
 
 const VerifyOTP = () => {
   const { verifyOTP } = useAuth();

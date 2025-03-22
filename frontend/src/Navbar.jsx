@@ -46,8 +46,10 @@ const Navbar = () => {
           <li className="text-gray-300 hover:text-white cursor-pointer transition-colors">
             Market
           </li>
-          <li className="text-gray-300 hover:text-white cursor-pointer transition-colors">
-            FAQ
+          <li>
+            <button className="bg-pink-600 text-white px-4 py-2 rounded-lg hover:bg-pink-700 transition-all">
+              Sign Up
+            </button>
           </li>
         </ul>
       </div>

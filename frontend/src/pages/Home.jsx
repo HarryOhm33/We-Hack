@@ -1,10 +1,10 @@
 import React from "react";
-import Background from "../components/BackgroundAnimation";
+import Background from "../BackgroundAnimation";
 import CTA from "../components/LandingPage/CTA";
 import FeaturesOverview from "../components/LandingPage/FeaturesOverview";
 import Footer from "../components/LandingPage/Footer";
 import HeroSection from "../components/LandingPage/HeroSection";
-import Navbar from "../components/Navbar";
+import Navbar from "../Navbar";
 
 const Home = () => {
   return (
