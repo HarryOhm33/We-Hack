@@ -3,8 +3,6 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import Background from "../components/BackgroundAnimation";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import toast from "react-hot-toast";
 
@@ -77,7 +75,6 @@ const Signup = () => {
   return (
     <div className="min-h-screen bg-black text-white overflow-hidden">
       <Background />
-      <Navbar />
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -265,8 +262,6 @@ const Signup = () => {
           </div>
         </div>
       </motion.div>
-
-      <Footer />
     </div>
   );
 };

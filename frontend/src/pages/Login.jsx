@@ -1,11 +1,11 @@
 import React from "react";
 import { FaArrowRight } from "react-icons/fa";
-// import Background from "./BackgroundAnimation";
+import Background from "../components/BackgroundAnimation";
 
 const Login = () => {
   return (
     <div className="relative flex items-center justify-center min-h-screen bg-black overflow-hidden">
-      {/* <Background /> */}
+      <Background />
       <div className="bg-gray-900 text-white p-8 rounded-2xl shadow-xl w-96 border border-gray-700 relative z-10 flex flex-col items-center overflow-hidden">
         {/* Abstract Background Shapes Inside the Box */}
         <div className="absolute top-0 left-0 w-24 h-24 bg-gradient-to-br from-purple-500 to-pink-500 rounded-br-full opacity-50"></div>
