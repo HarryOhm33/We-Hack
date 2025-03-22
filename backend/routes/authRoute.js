@@ -10,6 +10,7 @@ const {
   logout,
   verifyOTP,
   resendOTP,
+  verifyAuth,
 } = require("../controllers/authController");
 
 // ✅ User Signup
@@ -28,5 +29,7 @@ router.post("/logout", authenticate, wrapAsync(logout));
 router.get("/profile", authenticate, (req, res) => {
   res.status(200).json({ message: "Welcome!", user: req.user });
 });
+
+router.get("/verify", authenticate, wrapAsync(verifyAuth));
 
 module.exports = router;

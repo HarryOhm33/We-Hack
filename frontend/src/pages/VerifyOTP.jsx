@@ -29,12 +29,12 @@ const VerifyOTP = () => {
 
     try {
       setLoading(true);
-      const response = await verifyOTP(email, otp);
+      // Remove the response variable and status check
+      await verifyOTP(email, otp);
 
-      if (response.status === 200) {
-        toast.success(response.message || "Account verified successfully!");
-        navigate("/login");
-      }
+      // This will only execute if verification succeeds
+      toast.success("Account verified successfully!");
+      navigate("/login");
     } catch (error) {
       toast.error(error.message);
     } finally {
@@ -64,7 +64,10 @@ const VerifyOTP = () => {
           <span className="text-pink-400">{email}</span>
         </p>
 
-        <form onSubmit={handleSubmit} className="space-y-6 relative z-20 w-full flex flex-col items-center">
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-6 relative z-20 w-full flex flex-col items-center"
+        >
           <div className="w-full">
             <label className="block text-gray-300 mb-2">OTP Code</label>
             <input
@@ -101,7 +104,9 @@ const VerifyOTP = () => {
           <div className="text-center text-gray-300 text-sm mt-4">
             Don't receive code?{" "}
             <button
-              onClick={() => toast.error("Resend functionality not implemented yet")}
+              onClick={() =>
+                toast.error("Resend functionality not implemented yet")
+              }
               className="text-pink-400 hover:text-pink-300 transition-colors underline"
             >
               Send OTP

@@ -110,7 +110,6 @@ module.exports.login = async (req, res) => {
         role: user.role,
         organization: user.organization || null, // Include only if recruiter
       },
-      token, // (Optional) if you also want to return the token for frontend storage
     });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
@@ -187,4 +186,11 @@ module.exports.resendOTP = async (req, res) => {
   await sendEmail(email, "Resend OTP", `Your new OTP is ${otp}`);
 
   res.status(200).json({ message: "New OTP sent successfully." });
+};
+
+exports.verifyAuth = async (req, res) => {
+  if (req.user) {
+    return res.status(200).json({ user: req.user });
+  }
+  return res.status(401).json({ message: "Unauthorized" });
 };

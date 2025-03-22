@@ -49,10 +49,17 @@ const Signup = () => {
       };
 
       const response = await signup(signupData);
+      console.log("Signup Response:", response); // For debugging
 
-      if (response?.status === 200) {
+      if (
+        response?.message === "OTP sent to email. Verify to complete signup."
+      ) {
         toast.success(response.message);
         navigate("/verify", { state: { email: formData.email } });
+      } else if (response?.message) {
+        toast.error(response.message); // Show any error message from the backend
+      } else {
+        toast.error("Signup failed"); // Generic error if no specific message
       }
     } catch (error) {
       toast.error(error.message);
@@ -82,83 +89,86 @@ const Signup = () => {
         </h2>
 
         <div className="flex w-full mb-4 space-x-2">
-          <button 
+          <button
             type="button"
             className={`flex-1 px-4 py-2 rounded-lg font-semibold ${
-              formData.role === "candidate" 
-                ? "bg-pink-500 text-white" 
+              formData.role === "candidate"
+                ? "bg-pink-500 text-white"
                 : "bg-gray-800 text-gray-400"
-            }`} 
+            }`}
             onClick={() => toggleRole("candidate")}
           >
             Candidate
           </button>
-          <button 
+          <button
             type="button"
             className={`flex-1 px-4 py-2 rounded-lg font-semibold ${
-              formData.role === "recruiter" 
-                ? "bg-pink-500 text-white" 
+              formData.role === "recruiter"
+                ? "bg-pink-500 text-white"
                 : "bg-gray-800 text-gray-400"
-            }`} 
+            }`}
             onClick={() => toggleRole("recruiter")}
           >
             Recruiter
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4 relative z-20 w-full flex flex-col items-center">
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-4 relative z-20 w-full flex flex-col items-center"
+        >
           <div className="w-full">
             <label className="w-full text-gray-400">Full Name</label>
-            <input 
-              type="text" 
-              name="name" 
-              value={formData.name} 
-              onChange={handleChange} 
-              placeholder="Full Name" 
-              className="w-full px-4 py-2 mt-1 rounded-lg bg-gray-800 border border-gray-700 focus:border-purple-500 focus:ring-2 focus:ring-purple-400 outline-none" 
-              required 
+            <input
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              placeholder="Full Name"
+              className="w-full px-4 py-2 mt-1 rounded-lg bg-gray-800 border border-gray-700 focus:border-purple-500 focus:ring-2 focus:ring-purple-400 outline-none"
+              required
             />
           </div>
 
           {formData.role === "recruiter" && (
             <div className="w-full">
               <label className="w-full text-gray-400">Organization</label>
-              <input 
-                type="text" 
-                name="organization" 
-                value={formData.organization} 
-                onChange={handleChange} 
-                placeholder="Enter your organization" 
-                className="w-full px-4 py-2 mt-1 rounded-lg bg-gray-800 border border-gray-700 focus:border-purple-500 focus:ring-2 focus:ring-purple-400 outline-none" 
-                required 
+              <input
+                type="text"
+                name="organization"
+                value={formData.organization}
+                onChange={handleChange}
+                placeholder="Enter your organization"
+                className="w-full px-4 py-2 mt-1 rounded-lg bg-gray-800 border border-gray-700 focus:border-purple-500 focus:ring-2 focus:ring-purple-400 outline-none"
+                required
               />
             </div>
           )}
 
           <div className="w-full">
             <label className="w-full text-gray-400">Email</label>
-            <input 
-              type="email" 
-              name="email" 
-              value={formData.email} 
-              onChange={handleChange} 
-              placeholder="Email" 
-              className="w-full px-4 py-2 mt-1 rounded-lg bg-gray-800 border border-gray-700 focus:border-purple-500 focus:ring-2 focus:ring-purple-400 outline-none" 
-              required 
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="Email"
+              className="w-full px-4 py-2 mt-1 rounded-lg bg-gray-800 border border-gray-700 focus:border-purple-500 focus:ring-2 focus:ring-purple-400 outline-none"
+              required
             />
           </div>
 
           <div className="w-full">
             <label className="w-full text-gray-400">Password</label>
             <div className="relative">
-              <input 
-                type={showPassword ? "text" : "password"} 
-                name="password" 
-                value={formData.password} 
-                onChange={handleChange} 
-                placeholder="••••••••" 
-                className="w-full px-4 py-2 mt-1 rounded-lg bg-gray-800 border border-gray-700 focus:border-purple-500 focus:ring-2 focus:ring-purple-400 outline-none pr-10" 
-                required 
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="••••••••"
+                className="w-full px-4 py-2 mt-1 rounded-lg bg-gray-800 border border-gray-700 focus:border-purple-500 focus:ring-2 focus:ring-purple-400 outline-none pr-10"
+                required
               />
               <button
                 type="button"
@@ -177,14 +187,14 @@ const Signup = () => {
           <div className="w-full">
             <label className="w-full text-gray-400">Confirm Password</label>
             <div className="relative">
-              <input 
-                type={showConfirmPassword ? "text" : "password"} 
-                name="confirmPassword" 
-                value={formData.confirmPassword} 
-                onChange={handleChange} 
-                placeholder="••••••••" 
-                className="w-full px-4 py-2 mt-1 rounded-lg bg-gray-800 border border-gray-700 focus:border-purple-500 focus:ring-2 focus:ring-purple-400 outline-none pr-10" 
-                required 
+              <input
+                type={showConfirmPassword ? "text" : "password"}
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                placeholder="••••••••"
+                className="w-full px-4 py-2 mt-1 rounded-lg bg-gray-800 border border-gray-700 focus:border-purple-500 focus:ring-2 focus:ring-purple-400 outline-none pr-10"
+                required
               />
               <button
                 type="button"
@@ -200,8 +210,8 @@ const Signup = () => {
             </div>
           </div>
 
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             disabled={loading}
             className="flex items-center justify-center bg-pink-500 text-white px-6 py-2 rounded-full text-lg font-semibold hover:opacity-80 transition-all shadow-md shadow-pink-500/50 w-full mt-4"
           >

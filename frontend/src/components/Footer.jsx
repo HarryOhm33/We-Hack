@@ -8,9 +8,9 @@ const Footer = () => {
           <div>
             <div className="flex items-center mb-4">
               <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-pink-600 rounded-lg mr-3 flex items-center justify-center">
-                <span className="text-white font-bold text-xl">SBH</span>
+                <span className="text-white font-bold text-xl">H/E</span>
               </div>
-              <h3 className="text-white font-bold text-xl">COMPANY</h3>
+              <h3 className="text-white font-bold text-xl">Hire Easy</h3>
             </div>
             <p className="text-sm">
               Revolutionizing hiring with skill-based assessment technology.
