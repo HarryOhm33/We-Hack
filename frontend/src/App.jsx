@@ -7,7 +7,10 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import VerifyOTP from "./pages/VerifyOTP";
-import AllJob from "./pages/AllJob";
+import AllJobs from "./pages/AllJobs";
+import RecruiterDashboard from "./pages/RecruiterDashboard";
+import JobDetails from "./pages/JobDetails";
+import PostJob from "./pages/PostJob";
 // Import other pages as needed
 
 function App() {
@@ -23,7 +26,13 @@ function App() {
               <Route path="/signup" element={<Signup />} />
               <Route path="/verify" element={<VerifyOTP />} />
               <Route path="/login" element={<Login />} />
-               <Route path="/all-jobs" element={<AllJob />} />
+              <Route path="/all-jobs" element={<AllJobs />} />
+              <Route path="/jobs/:jobId" element={<JobDetails />} />
+              <Route path="/post-job" element={<PostJob />} />
+              <Route
+                path="/recruiter-dashboard"
+                element={<RecruiterDashboard />}
+              />
               {/* Add other routes */}
             </Routes>
           </main>

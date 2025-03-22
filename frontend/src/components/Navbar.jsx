@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 const Navbar = () => {
-  const { user, logout, loading, isAuthenticating } = useAuth(); // Get isAuthenticating
+  const { user, logout, loading, isAuthenticating } = useAuth();
   const [scrolled, setScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
@@ -22,7 +22,6 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   });
 
-  // Close mobile menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (isOpen && !event.target.closest(".mobile-menu")) {
@@ -38,7 +37,7 @@ const Navbar = () => {
       await logout();
       toast.success("Logged out successfully");
       setIsOpen(false);
-      navigate("/"); // Redirect to home after logout
+      navigate("/");
     } catch (error) {
       toast.error(error.message);
     }
@@ -46,13 +45,13 @@ const Navbar = () => {
 
   const navLinks = [
     { name: "Home", path: "/" },
-    { name: "All Jobs", path: "/jobs" },
-    { name: "Employers", path: "/employers" },
+    { name: "All Jobs", path: "/all-jobs" },
+    ...(user?.role === "recruiter"
+      ? [{ name: "Recruiter Dashboard", path: "/recruiter-dashboard" }]
+      : []),
   ];
 
-  // Conditionally render based on isAuthenticating
   if (isAuthenticating) {
-    // You can render a loading indicator here if you want
     return (
       <motion.nav
         initial={{ y: -100 }}
@@ -65,7 +64,6 @@ const Navbar = () => {
         }`}
       >
         <div className="container mx-auto flex justify-between items-center">
-          {/* Logo */}
           <Link to="/" className="flex items-center space-x-3">
             <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-pink-600 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-xl">H/E</span>
@@ -74,7 +72,6 @@ const Navbar = () => {
               Hire Easy
             </span>
           </Link>
-          {/* You might want to show a minimal loading indicator here */}
           <div>Loading...</div>
         </div>
       </motion.nav>
@@ -93,7 +90,6 @@ const Navbar = () => {
       }`}
     >
       <div className="container mx-auto flex justify-between items-center">
-        {/* Logo */}
         <Link to="/" className="flex items-center space-x-3">
           <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-pink-600 rounded-lg flex items-center justify-center">
             <span className="text-white font-bold text-xl">H/E</span>
@@ -103,7 +99,6 @@ const Navbar = () => {
           </span>
         </Link>
 
-        {/* Desktop Menu */}
         <div className="hidden md:flex items-center space-x-8">
           {navLinks.map((link) => (
             <Link
@@ -143,7 +138,6 @@ const Navbar = () => {
           )}
         </div>
 
-        {/* Mobile Menu Button */}
         <button
           onClick={() => setIsOpen(!isOpen)}
           className="md:hidden text-gray-300 hover:text-white p-2"
@@ -157,7 +151,6 @@ const Navbar = () => {
         </button>
       </div>
 
-      {/* Mobile Menu */}
       {isOpen && (
         <motion.div
           initial={{ opacity: 0, x: 100 }}
