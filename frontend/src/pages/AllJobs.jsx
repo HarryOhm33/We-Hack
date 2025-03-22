@@ -32,15 +32,6 @@ const AllJobs = () => {
     fetchJobs();
   }, []);
 
-  const handleApply = (jobId) => {
-    if (!user) {
-      toast.error("Please login to apply for jobs");
-      return;
-    }
-    // Add your apply logic here
-    toast.success("Application submitted successfully!");
-  };
-
   const filteredJobs = jobs.filter(
     (job) =>
       job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -114,21 +105,13 @@ const AllJobs = () => {
                   </div>
                 </div>
 
-                <div className="mt-6 pt-4 border-t border-gray-700 flex justify-between items-center">
-                  <div className="space-x-3">
-                    <Link
-                      to={`/jobs/${job._id}`}
-                      className="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-colors"
-                    >
-                      View Details
-                    </Link>
-                    <button
-                      onClick={() => handleApply(job._id)}
-                      className="px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-400 transition-colors"
-                    >
-                      Apply Now
-                    </button>
-                  </div>
+                <div className="mt-6 pt-4 border-t border-gray-700 flex justify-end">
+                  <Link
+                    to={`/jobs/${job._id}`}
+                    className="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-400 transition-colors"
+                  >
+                    View Details
+                  </Link>
                 </div>
               </div>
             </motion.div>

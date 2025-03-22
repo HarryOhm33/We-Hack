@@ -12,6 +12,7 @@ const ViewApplications = () => {
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [updatingStatus, setUpdatingStatus] = useState(null);
 
   useEffect(() => {
     if (isAuthenticating) return;
@@ -31,7 +32,8 @@ const ViewApplications = () => {
         if (!response.ok) throw new Error("Failed to fetch applications");
 
         const data = await response.json();
-        setApplications(data);
+        const sorted = data.sort((a, b) => (b.score || 0) - (a.score || 0));
+        setApplications(sorted);
       } catch (error) {
         setError(error.message);
         toast.error("Failed to load applications");
@@ -42,6 +44,36 @@ const ViewApplications = () => {
 
     fetchApplications();
   }, [jobId, user, navigate, isAuthenticating]);
+
+  const handleUpdateStatus = async (applicationId, status) => {
+    setUpdatingStatus(applicationId);
+    try {
+      const response = await fetch(
+        `http://localhost:9001/api/jobs/${jobId}/applications/${applicationId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ status }),
+          credentials: "include",
+        }
+      );
+
+      if (!response.ok) throw new Error("Failed to update status");
+
+      setApplications((prev) =>
+        prev.map((app) =>
+          app._id === applicationId ? { ...app, status } : app
+        )
+      );
+      toast.success(`Application ${status}`);
+    } catch (error) {
+      toast.error(error.message);
+    } finally {
+      setUpdatingStatus(null);
+    }
+  };
 
   if (isAuthenticating || loading) {
     return (
@@ -87,26 +119,65 @@ const ViewApplications = () => {
                   animate={{ opacity: 1, x: 0 }}
                   className="bg-gray-800/80 backdrop-blur-md rounded-xl p-6 border border-gray-700"
                 >
-                  <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
-                    <div className="mb-4 md:mb-0">
+                  <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div className="flex-1">
                       <h2 className="text-2xl font-bold text-white">
                         {application.candidate.name}
                       </h2>
                       <p className="text-purple-400">
                         {application.candidate.email}
                       </p>
+                      <div className="mt-2 text-pink-400">
+                        Score: {application.score || "N/A"}
+                      </div>
                     </div>
-                    <span
-                      className={`px-3 py-1 rounded-full ${
-                        application.status === "pending"
-                          ? "bg-yellow-500/20 text-yellow-400"
-                          : application.status === "accepted"
-                          ? "bg-green-500/20 text-green-400"
-                          : "bg-red-500/20 text-red-400"
-                      }`}
-                    >
-                      {application.status}
-                    </span>
+                    <div className="flex items-center gap-4">
+                      <span
+                        className={`px-3 py-1 rounded-full ${
+                          application.status === "pending"
+                            ? "bg-yellow-500/20 text-yellow-400"
+                            : application.status === "accepted"
+                            ? "bg-green-500/20 text-green-400"
+                            : "bg-red-500/20 text-red-400"
+                        }`}
+                      >
+                        {application.status}
+                      </span>
+                      {application.status === "pending" && (
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() =>
+                              handleUpdateStatus(application._id, "accepted")
+                            }
+                            disabled={updatingStatus === application._id}
+                            className={`px-4 py-2 rounded-lg ${
+                              updatingStatus === application._id
+                                ? "bg-gray-600 cursor-not-allowed"
+                                : "bg-green-500 hover:bg-green-600"
+                            } transition-all`}
+                          >
+                            {updatingStatus === application._id
+                              ? "Updating..."
+                              : "Accept"}
+                          </button>
+                          <button
+                            onClick={() =>
+                              handleUpdateStatus(application._id, "rejected")
+                            }
+                            disabled={updatingStatus === application._id}
+                            className={`px-4 py-2 rounded-lg ${
+                              updatingStatus === application._id
+                                ? "bg-gray-600 cursor-not-allowed"
+                                : "bg-red-500 hover:bg-red-600"
+                            } transition-all`}
+                          >
+                            {updatingStatus === application._id
+                              ? "Updating..."
+                              : "Reject"}
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   </div>
 
                   <div className="mt-6 space-y-4">

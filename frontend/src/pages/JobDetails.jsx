@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
@@ -7,10 +7,12 @@ import Background from "../components/BackgroundAnimation";
 
 const JobDetails = () => {
   const { jobId } = useParams();
+  const navigate = useNavigate();
   const { user } = useAuth();
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [hasApplied, setHasApplied] = useState(false);
 
   useEffect(() => {
     const fetchAllJobs = async () => {
@@ -24,9 +26,14 @@ const JobDetails = () => {
         }
 
         const data = await response.json();
-        const foundJob = data.find((j) => j._id === jobId); // Filter in frontend
+        const foundJob = data.find((j) => j._id === jobId);
+
         if (foundJob) {
           setJob(foundJob);
+          // Check if current user has already applied
+          if (user && foundJob.applicants.includes(user.id)) {
+            setHasApplied(true);
+          }
         } else {
           setError("Job not found");
         }
@@ -40,7 +47,7 @@ const JobDetails = () => {
     };
 
     fetchAllJobs();
-  }, [jobId]);
+  }, [jobId, user]); // Added user to dependencies
 
   const handleApply = () => {
     if (!user) {
@@ -49,6 +56,14 @@ const JobDetails = () => {
     }
     // Add your apply logic here
     toast.success("Application submitted successfully!");
+  };
+
+  const handleTakeAssessment = () => {
+    if (!user) {
+      toast.error("Please login to take the assessment");
+      return;
+    }
+    navigate(`/jobs/${jobId}/assessment`);
   };
 
   if (loading) {
@@ -111,6 +126,14 @@ const JobDetails = () => {
                     {job.skillsRequired.join(", ")}
                   </span>
                 </div>
+                {job.assessmentRequired && (
+                  <div className="flex items-center">
+                    <span className="mr-2">📝 Assessment:</span>
+                    <span className="text-purple-400">
+                      {job.assessmentQuestions.length} questions
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -130,12 +153,34 @@ const JobDetails = () => {
               >
                 Back to Jobs
               </Link>
-              <button
-                onClick={handleApply}
-                className="px-6 py-3 bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-lg hover:opacity-90 transition-all"
-              >
-                Apply Now
-              </button>
+              {user?.role === "candidate" &&
+                (hasApplied ? (
+                  <button
+                    disabled
+                    className="px-6 py-3 bg-gray-600 text-gray-400 rounded-lg cursor-not-allowed"
+                  >
+                    Already Applied
+                  </button>
+                ) : job.assessmentRequired ? (
+                  <button
+                    onClick={handleTakeAssessment}
+                    className="px-6 py-3 bg-gradient-to-r from-green-500 to-purple-500 text-white rounded-lg hover:opacity-90 transition-all"
+                  >
+                    Take Assessment
+                  </button>
+                ) : (
+                  <button
+                    onClick={handleApply}
+                    className="px-6 py-3 bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-lg hover:opacity-90 transition-all"
+                  >
+                    Apply Now
+                  </button>
+                ))}
+              {user?.role === "recruiter" && (
+                <span className="text-gray-400 px-6 py-3">
+                  Recruiter View Only
+                </span>
+              )}
             </div>
           </div>
         </motion.div>

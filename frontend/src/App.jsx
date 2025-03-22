@@ -12,7 +12,7 @@ import RecruiterDashboard from "./pages/RecruiterDashboard";
 import JobDetails from "./pages/JobDetails";
 import PostJob from "./pages/PostJob";
 import ViewApplications from "./pages/ViewApplications";
-// Import other pages as needed
+import Assessment from "./pages/Assessment"; // Add this import
 
 function App() {
   return (
@@ -28,13 +28,14 @@ function App() {
               <Route path="/verify" element={<VerifyOTP />} />
               <Route path="/login" element={<Login />} />
               <Route path="/all-jobs" element={<AllJobs />} />
+              {/* Add Assessment route */}
+              <Route path="/jobs/:jobId/assessment" element={<Assessment />} />
               <Route path="/jobs/:jobId" element={<JobDetails />} />
               <Route path="/post-job" element={<PostJob />} />
               <Route
                 path="/recruiter-dashboard"
                 element={<RecruiterDashboard />}
               />
-              {/* Add other routes */}
               <Route
                 path="/:jobId/applications"
                 element={<ViewApplications />}

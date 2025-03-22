@@ -1,5 +1,57 @@
 const Job = require("../models/job");
 const Application = require("../models/application");
+const sendEmail = require("../utils/sendEmail");
+const axios = require("axios");
+
+exports.updateApplicationStatus = async (req, res) => {
+  try {
+    const { status } = req.body;
+
+    // Ensure status is valid
+    if (!["accepted", "rejected"].includes(status)) {
+      return res
+        .status(400)
+        .json({ message: "Invalid status. Use 'accepted' or 'rejected'." });
+    }
+
+    const application = await Application.findById(req.params.applicationId)
+      .populate("job")
+      .populate("candidate", "email name"); // Get candidate details
+
+    if (!application)
+      return res.status(404).json({ message: "Application not found" });
+
+    // Ensure the recruiter owns the job
+    if (application.job.postedBy.toString() !== req.user.id) {
+      return res
+        .status(403)
+        .json({ message: "You can only update applications for your jobs." });
+    }
+
+    // Update status
+    application.status = status;
+    await application.save();
+
+    // Send email notification
+    const emailSubject = `Your Job Application has been ${status}`;
+    const emailText = `Dear ${
+      application.candidate.name
+    },\n\nYour application for "${
+      application.job.title
+    }" has been ${status}.\n\n${
+      status === "accepted"
+        ? "Congratulations! We will contact you soon."
+        : "We appreciate your effort and encourage you to apply for future opportunities."
+    }\n\nBest Regards,\nRecruitment Team`;
+
+    await sendEmail(application.candidate.email, emailSubject, emailText);
+
+    res.json({ message: `Application ${status} successfully! Email sent.` });
+  } catch (error) {
+    console.error("Error updating application status:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
 
 exports.postJob = async (req, res) => {
   try {
@@ -81,20 +133,53 @@ exports.getAllJobs = async (req, res) => {
 };
 
 exports.applyForJob = async (req, res) => {
-  if (req.user.role !== "candidate") {
-    return res
-      .status(403)
-      .json({ message: "Only candidates can apply for jobs" });
+  try {
+    const { coverLetter, score } = req.body;
+    const job = await Job.findById(req.params.jobId);
+
+    if (!job) return res.status(404).json({ message: "Job not found" });
+    if (req.user.role !== "candidate") {
+      return res
+        .status(403)
+        .json({ message: "Only candidates can apply for jobs" });
+    }
+
+    // ✅ Check if the user has already applied
+    if (job.applicants.includes(req.user.id)) {
+      return res
+        .status(400)
+        .json({ message: "You have already applied for this job." });
+    }
+
+    // ✅ Call ML Model API to get prediction
+    const mlResponse = await axios.post("http://localhost:5000/predict", {
+      score,
+      coverLetter,
+    });
+
+    const prediction = mlResponse.data.prediction; // "Fit" or "Not Fit"
+
+    // ✅ Add applicant ID to job's `applicants` array
+    job.applicants.push(req.user.id);
+    await job.save();
+
+    // ✅ Save the application with ML prediction
+    const application = new Application({
+      job: req.params.jobId,
+      candidate: req.user.id,
+      coverLetter,
+      score,
+      prediction,
+    });
+
+    await application.save();
+    res
+      .status(201)
+      .json({ message: "Application submitted successfully!", prediction });
+  } catch (error) {
+    console.error("Error applying for job:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
   }
-
-  const application = new Application({
-    job: req.params.jobId,
-    candidate: req.user.id,
-    coverLetter: req.body.coverLetter,
-  });
-
-  await application.save();
-  res.status(201).json({ message: "Application submitted successfully!" });
 };
 
 exports.getJobApplications = async (req, res) => {
