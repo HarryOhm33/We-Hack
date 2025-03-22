@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 
-const BackgroundAnimation = () => {
+const Background = () => {
   const canvasRef = useRef(null);
 
   useEffect(() => {
@@ -20,20 +20,25 @@ const BackgroundAnimation = () => {
 
     // Particle properties
     const particlesArray = [];
-    const numberOfParticles = 100;
+    const numberOfParticles = 80;
 
     class Particle {
       constructor() {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 3 + 1;
-        this.speedX = Math.random() * 1 - 0.5;
-        this.speedY = Math.random() * 1 - 0.5;
-        this.color = `rgba(${Math.floor(
-          Math.random() * 90 + 100
-        )}, ${Math.floor(Math.random() * 70 + 100)}, ${Math.floor(
-          Math.random() * 255
-        )}, ${Math.random() * 0.5 + 0.1})`;
+        this.size = Math.random() * 2 + 0.5;
+        this.speedX = Math.random() * 0.5 - 0.25;
+        this.speedY = Math.random() * 0.5 - 0.25;
+
+        // Color theme: Purple and Pink with yellow accents
+        const colorOptions = [
+          `rgba(139, 92, 246, ${Math.random() * 0.3 + 0.1})`, // Purple
+          `rgba(236, 72, 153, ${Math.random() * 0.3 + 0.1})`, // Pink
+          `rgba(250, 204, 21, ${Math.random() * 0.3 + 0.05})`, // Yellow (rare)
+        ];
+
+        this.color =
+          colorOptions[Math.floor(Math.random() * colorOptions.length)];
       }
 
       update() {
@@ -64,7 +69,7 @@ const BackgroundAnimation = () => {
     // Animation loop
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = "rgba(10, 10, 20, 0.01)";
+      ctx.fillStyle = "rgba(0, 0, 0, 0.01)"; // Dark background
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       for (let i = 0; i < particlesArray.length; i++) {
@@ -80,7 +85,7 @@ const BackgroundAnimation = () => {
 
     // Connect particles with lines
     const connectParticles = () => {
-      const maxDistance = 100;
+      const maxDistance = 120;
       for (let a = 0; a < particlesArray.length; a++) {
         for (let b = a; b < particlesArray.length; b++) {
           const dx = particlesArray[a].x - particlesArray[b].x;
@@ -89,8 +94,32 @@ const BackgroundAnimation = () => {
 
           if (distance < maxDistance) {
             const opacity = 1 - distance / maxDistance;
-            ctx.strokeStyle = `rgba(120, 120, 255, ${opacity * 0.2})`;
-            ctx.lineWidth = 1;
+
+            // Create a gradient for the line
+            const gradient = ctx.createLinearGradient(
+              particlesArray[a].x,
+              particlesArray[a].y,
+              particlesArray[b].x,
+              particlesArray[b].y
+            );
+
+            gradient.addColorStop(
+              0,
+              particlesArray[a].color.replace(
+                /[\d.]+\)$/g,
+                `${opacity * 0.15})`
+              )
+            );
+            gradient.addColorStop(
+              1,
+              particlesArray[b].color.replace(
+                /[\d.]+\)$/g,
+                `${opacity * 0.15})`
+              )
+            );
+
+            ctx.strokeStyle = gradient;
+            ctx.lineWidth = 0.5;
             ctx.beginPath();
             ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
             ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
@@ -118,4 +147,4 @@ const BackgroundAnimation = () => {
   );
 };
 
-export default BackgroundAnimation;
+export default Background;

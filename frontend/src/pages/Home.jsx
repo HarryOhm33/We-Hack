@@ -1,5 +1,5 @@
 import React from "react";
-import BackgroundAnimation from "../components/LandingPage/BackgroundAnimation";
+import Background from "../components/LandingPage/Background";
 import CTA from "../components/LandingPage/CTA";
 import FeaturesOverview from "../components/LandingPage/FeaturesOverview";
 import Footer from "../components/LandingPage/Footer";
@@ -8,12 +8,23 @@ import Navbar from "../components/Navbar/Navbar";
 
 const Home = () => {
   return (
-    <div className="bg-gray-900 min-h-screen">
-      <BackgroundAnimation />
+    <div className="min-h-screen bg-black text-white overflow-hidden">
+      {/* Background Animation */}
+      <Background />
+
+      {/* Navbar */}
       <Navbar />
+
+      {/* Hero Section */}
       <HeroSection />
+
+      {/* Features Overview */}
       <FeaturesOverview />
+
+      {/* Call to Action */}
       <CTA />
+
+      {/* Footer */}
       <Footer />
     </div>
   );

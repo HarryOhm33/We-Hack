@@ -1,20 +1,57 @@
-import React from "react";
+import { motion } from "framer-motion";
+import React, { useEffect, useState } from "react";
 
 const Navbar = () => {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 10) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <nav className="bg-gradient-to-r from-gray-900 to-gray-800 text-white fixed w-full z-50 shadow-lg p-4">
+    <motion.nav
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      transition={{ duration: 0.5 }}
+      className={`fixed w-full z-50 p-4 transition-all duration-300 ${
+        scrolled
+          ? "bg-black bg-opacity-80 backdrop-blur-md shadow-lg"
+          : "bg-transparent"
+      }`}
+    >
       <div className="container mx-auto flex justify-between items-center">
-        <h2 className="text-2xl font-bold">Skill-Based Hiring</h2>
-        <ul className="flex space-x-6">
-          <li className="hover:text-purple-300 cursor-pointer">About</li>
-          <li className="hover:text-purple-300 cursor-pointer">Features</li>
-          <li className="hover:text-purple-300 cursor-pointer">Login</li>
-          <li className="hover:text-gray-900 cursor-pointer bg-purple-500 hover:bg-purple-400 text-white px-4 py-2 rounded-md transition-colors duration-300">
-            Sign Up
+        <div className="flex items-center">
+          <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-pink-600 rounded-lg mr-3 flex items-center justify-center">
+            <span className="text-white font-bold text-xl">SBH</span>
+          </div>
+          <h2 className="text-2xl font-bold text-white">COMPANY</h2>
+        </div>
+
+        <ul className="hidden md:flex space-x-8">
+          <li className="text-gray-300 hover:text-white cursor-pointer transition-colors border-b-2 border-pink-600 pb-1">
+            Home
+          </li>
+          <li className="text-gray-300 hover:text-white cursor-pointer transition-colors">
+            About
+          </li>
+          <li className="text-gray-300 hover:text-white cursor-pointer transition-colors">
+            Market
+          </li>
+          <li className="text-gray-300 hover:text-white cursor-pointer transition-colors">
+            FAQ
           </li>
         </ul>
       </div>
-    </nav>
+    </motion.nav>
   );
 };
 
