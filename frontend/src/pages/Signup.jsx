@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { motion } from "framer-motion";
+import { FaArrowRight } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import Background from "../components/BackgroundAnimation";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import toast from "react-hot-toast";
+import Background from "../components/BackgroundAnimation";
 
 const Signup = () => {
   const { signup, loading } = useAuth();
@@ -22,7 +22,6 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (formData.password !== formData.confirmPassword) {
       toast.error("Passwords do not match");
       return;
@@ -51,7 +50,7 @@ const Signup = () => {
 
       const response = await signup(signupData);
 
-      if (response.status === 200) {
+      if (response?.status === 200) {
         toast.success(response.message);
         navigate("/verify", { state: { email: formData.email } });
       }
@@ -73,195 +72,160 @@ const Signup = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white overflow-hidden">
+    <div className="relative flex items-center justify-center min-h-screen bg-black overflow-hidden">
       <Background />
+      <div className="bg-gray-900 text-white p-8 rounded-2xl shadow-xl w-96 border border-gray-700 relative z-10 flex flex-col items-center overflow-hidden">
+        <div className="absolute top-0 left-0 w-20 h-20 bg-purple-500 rounded-br-full"></div>
+        <div className="absolute top-0 right-0 w-20 h-20 bg-yellow-500 rounded-bl-full"></div>
+        <h2 className="text-3xl font-bold mb-6 text-purple-400 relative z-20 text-center w-full">
+          Create Account
+        </h2>
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="container mx-auto px-4 py-16"
-      >
-        <div className="max-w-md mx-auto">
-          <div className="relative z-10 bg-gray-900 bg-opacity-90 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-gray-800">
-            <h2 className="text-3xl font-bold text-center mb-8 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-              Create Account
-            </h2>
+        <div className="flex w-full mb-4 space-x-2">
+          <button 
+            type="button"
+            className={`flex-1 px-4 py-2 rounded-lg font-semibold ${
+              formData.role === "candidate" 
+                ? "bg-pink-500 text-white" 
+                : "bg-gray-800 text-gray-400"
+            }`} 
+            onClick={() => toggleRole("candidate")}
+          >
+            Candidate
+          </button>
+          <button 
+            type="button"
+            className={`flex-1 px-4 py-2 rounded-lg font-semibold ${
+              formData.role === "recruiter" 
+                ? "bg-pink-500 text-white" 
+                : "bg-gray-800 text-gray-400"
+            }`} 
+            onClick={() => toggleRole("recruiter")}
+          >
+            Recruiter
+          </button>
+        </div>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Role Toggle */}
-              <div className="flex flex-col sm:flex-row gap-4 mb-6">
-                <button
-                  type="button"
-                  onClick={() => toggleRole("candidate")}
-                  className={`flex-1 py-3 rounded-lg transition-all ${
-                    formData.role === "candidate"
-                      ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg"
-                      : "bg-gray-800 text-gray-300 hover:bg-gray-700"
-                  }`}
-                >
-                  Candidate
-                </button>
-                <button
-                  type="button"
-                  onClick={() => toggleRole("recruiter")}
-                  className={`flex-1 py-3 rounded-lg transition-all ${
-                    formData.role === "recruiter"
-                      ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg"
-                      : "bg-gray-800 text-gray-300 hover:bg-gray-700"
-                  }`}
-                >
-                  Recruiter
-                </button>
-              </div>
+        <form onSubmit={handleSubmit} className="space-y-4 relative z-20 w-full flex flex-col items-center">
+          <div className="w-full">
+            <label className="w-full text-gray-400">Full Name</label>
+            <input 
+              type="text" 
+              name="name" 
+              value={formData.name} 
+              onChange={handleChange} 
+              placeholder="Full Name" 
+              className="w-full px-4 py-2 mt-1 rounded-lg bg-gray-800 border border-gray-700 focus:border-purple-500 focus:ring-2 focus:ring-purple-400 outline-none" 
+              required 
+            />
+          </div>
 
-              {/* Name Field */}
-              <div>
-                <label className="block text-gray-300 mb-2 text-sm">
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/30 focus:outline-none text-gray-100 transition-all"
-                  placeholder="John Doe"
-                  required
-                  minLength="3"
-                />
-              </div>
+          {formData.role === "recruiter" && (
+            <div className="w-full">
+              <label className="w-full text-gray-400">Organization</label>
+              <input 
+                type="text" 
+                name="organization" 
+                value={formData.organization} 
+                onChange={handleChange} 
+                placeholder="Enter your organization" 
+                className="w-full px-4 py-2 mt-1 rounded-lg bg-gray-800 border border-gray-700 focus:border-purple-500 focus:ring-2 focus:ring-purple-400 outline-none" 
+                required 
+              />
+            </div>
+          )}
 
-              {/* Organization Field */}
-              {formData.role === "recruiter" && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <label className="block text-gray-300 mb-2 text-sm">
-                    Organization
-                  </label>
-                  <input
-                    type="text"
-                    name="organization"
-                    value={formData.organization}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/30 focus:outline-none text-gray-100 transition-all"
-                    placeholder="Tech Corp Inc."
-                    required
-                  />
-                </motion.div>
-              )}
+          <div className="w-full">
+            <label className="w-full text-gray-400">Email</label>
+            <input 
+              type="email" 
+              name="email" 
+              value={formData.email} 
+              onChange={handleChange} 
+              placeholder="Email" 
+              className="w-full px-4 py-2 mt-1 rounded-lg bg-gray-800 border border-gray-700 focus:border-purple-500 focus:ring-2 focus:ring-purple-400 outline-none" 
+              required 
+            />
+          </div>
 
-              {/* Email Field */}
-              <div>
-                <label className="block text-gray-300 mb-2 text-sm">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/30 focus:outline-none text-gray-100 transition-all"
-                  placeholder="john@example.com"
-                  required
-                />
-              </div>
-
-              {/* Password Fields */}
-              <div>
-                <label className="block text-gray-300 mb-2 text-sm">
-                  Password
-                </label>
-                <div className="relative">
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    name="password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/30 focus:outline-none text-gray-100 transition-all pr-12"
-                    placeholder="••••••••"
-                    required
-                    minLength="6"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-purple-400 transition-colors"
-                  >
-                    {showPassword ? (
-                      <EyeSlashIcon className="h-5 w-5" />
-                    ) : (
-                      <EyeIcon className="h-5 w-5" />
-                    )}
-                  </button>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-gray-300 mb-2 text-sm">
-                  Confirm Password
-                </label>
-                <div className="relative">
-                  <input
-                    type={showConfirmPassword ? "text" : "password"}
-                    name="confirmPassword"
-                    value={formData.confirmPassword}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/30 focus:outline-none text-gray-100 transition-all pr-12"
-                    placeholder="••••••••"
-                    required
-                    minLength="6"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-purple-400 transition-colors"
-                  >
-                    {showConfirmPassword ? (
-                      <EyeSlashIcon className="h-5 w-5" />
-                    ) : (
-                      <EyeIcon className="h-5 w-5" />
-                    )}
-                  </button>
-                </div>
-              </div>
-
-              {/* Submit Button */}
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                type="submit"
-                disabled={loading}
-                className="w-full py-3 px-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-semibold rounded-lg transition-all relative"
+          <div className="w-full">
+            <label className="w-full text-gray-400">Password</label>
+            <div className="relative">
+              <input 
+                type={showPassword ? "text" : "password"} 
+                name="password" 
+                value={formData.password} 
+                onChange={handleChange} 
+                placeholder="••••••••" 
+                className="w-full px-4 py-2 mt-1 rounded-lg bg-gray-800 border border-gray-700 focus:border-purple-500 focus:ring-2 focus:ring-purple-400 outline-none pr-10" 
+                required 
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-purple-400"
               >
-                {loading ? (
-                  <div className="flex items-center justify-center">
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                  </div>
+                {showPassword ? (
+                  <EyeSlashIcon className="h-5 w-5" />
                 ) : (
-                  "Sign Up"
+                  <EyeIcon className="h-5 w-5" />
                 )}
-              </motion.button>
-            </form>
-
-            <div className="mt-6 text-center text-gray-400 text-sm">
-              <p>
-                Already have an account?{" "}
-                <button
-                  onClick={() => navigate("/login")}
-                  className="text-purple-400 hover:text-purple-300 transition-colors font-medium"
-                  disabled={loading}
-                >
-                  Log in
-                </button>
-              </p>
+              </button>
             </div>
           </div>
+
+          <div className="w-full">
+            <label className="w-full text-gray-400">Confirm Password</label>
+            <div className="relative">
+              <input 
+                type={showConfirmPassword ? "text" : "password"} 
+                name="confirmPassword" 
+                value={formData.confirmPassword} 
+                onChange={handleChange} 
+                placeholder="••••••••" 
+                className="w-full px-4 py-2 mt-1 rounded-lg bg-gray-800 border border-gray-700 focus:border-purple-500 focus:ring-2 focus:ring-purple-400 outline-none pr-10" 
+                required 
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-purple-400"
+              >
+                {showConfirmPassword ? (
+                  <EyeSlashIcon className="h-5 w-5" />
+                ) : (
+                  <EyeIcon className="h-5 w-5" />
+                )}
+              </button>
+            </div>
+          </div>
+
+          <button 
+            type="submit" 
+            disabled={loading}
+            className="flex items-center justify-center bg-pink-500 text-white px-6 py-2 rounded-full text-lg font-semibold hover:opacity-80 transition-all shadow-md shadow-pink-500/50 w-full mt-4"
+          >
+            {loading ? (
+              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+            ) : (
+              <>
+                Sign Up <FaArrowRight className="ml-2" />
+              </>
+            )}
+          </button>
+        </form>
+
+        <div className="mt-6 text-sm relative z-20">
+          <span className="text-gray-400">Already have an account? </span>
+          <button
+            onClick={() => navigate("/login")}
+            className="text-purple-400 hover:text-purple-300 transition-all underline"
+            disabled={loading}
+          >
+            Log in
+          </button>
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 };
