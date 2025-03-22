@@ -1,5 +1,5 @@
-import React from "react";
 import { motion } from "framer-motion";
+import React from "react";
 
 const FeatureCard = ({ icon, title, description, delay }) => {
   return (
@@ -22,23 +22,27 @@ const FeaturesOverview = () => {
     {
       icon: "🧠",
       title: "Skill Assessment",
-      description: "Evaluate candidates based on their actual capabilities with our advanced assessment tools."
+      description:
+        "Evaluate candidates based on their actual capabilities with our advanced assessment tools.",
     },
     {
       icon: "📊",
       title: "Data-Driven Matches",
-      description: "Our AI algorithms match candidates to positions based on skill compatibility."
+      description:
+        "Our AI algorithms match candidates to positions based on skill compatibility.",
     },
     {
       icon: "🔍",
       title: "Unbiased Hiring",
-      description: "Focus on skills rather than backgrounds to promote diversity and inclusion."
+      description:
+        "Focus on skills rather than backgrounds to promote diversity and inclusion.",
     },
     {
       icon: "⏱️",
       title: "Time Efficiency",
-      description: "Reduce time-to-hire by focusing on qualified candidates from the start."
-    }
+      description:
+        "Reduce time-to-hire by focusing on qualified candidates from the start.",
+    },
   ];
 
   return (

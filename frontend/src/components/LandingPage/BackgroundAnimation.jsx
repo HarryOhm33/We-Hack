@@ -29,9 +29,11 @@ const BackgroundAnimation = () => {
         this.size = Math.random() * 3 + 1;
         this.speedX = Math.random() * 1 - 0.5;
         this.speedY = Math.random() * 1 - 0.5;
-        this.color = `rgba(${Math.floor(Math.random() * 90 + 100)}, ${Math.floor(
-          Math.random() * 70 + 100
-        )}, ${Math.floor(Math.random() * 255)}, ${Math.random() * 0.5 + 0.1})`;
+        this.color = `rgba(${Math.floor(
+          Math.random() * 90 + 100
+        )}, ${Math.floor(Math.random() * 70 + 100)}, ${Math.floor(
+          Math.random() * 255
+        )}, ${Math.random() * 0.5 + 0.1})`;
       }
 
       update() {
@@ -69,10 +71,10 @@ const BackgroundAnimation = () => {
         particlesArray[i].update();
         particlesArray[i].draw();
       }
-      
+
       // Draw connecting lines
       connectParticles();
-      
+
       animationFrameId = requestAnimationFrame(animate);
     };
 
@@ -84,7 +86,7 @@ const BackgroundAnimation = () => {
           const dx = particlesArray[a].x - particlesArray[b].x;
           const dy = particlesArray[a].y - particlesArray[b].y;
           const distance = Math.sqrt(dx * dx + dy * dy);
-          
+
           if (distance < maxDistance) {
             const opacity = 1 - distance / maxDistance;
             ctx.strokeStyle = `rgba(120, 120, 255, ${opacity * 0.2})`;

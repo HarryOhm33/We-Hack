@@ -9,7 +9,9 @@ const Navbar = () => {
           <li className="hover:text-purple-300 cursor-pointer">About</li>
           <li className="hover:text-purple-300 cursor-pointer">Features</li>
           <li className="hover:text-purple-300 cursor-pointer">Login</li>
-          <li className="hover:text-gray-900 cursor-pointer bg-purple-500 hover:bg-purple-400 text-white px-4 py-2 rounded-md transition-colors duration-300">Sign Up</li>
+          <li className="hover:text-gray-900 cursor-pointer bg-purple-500 hover:bg-purple-400 text-white px-4 py-2 rounded-md transition-colors duration-300">
+            Sign Up
+          </li>
         </ul>
       </div>
     </nav>

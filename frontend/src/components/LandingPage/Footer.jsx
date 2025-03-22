@@ -7,7 +7,9 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-left mb-8">
           <div>
             <h3 className="text-white font-bold mb-3">Skill-Based Hiring</h3>
-            <p className="text-sm">Revolutionizing the way companies hire talent in the digital age.</p>
+            <p className="text-sm">
+              Revolutionizing the way companies hire talent in the digital age.
+            </p>
           </div>
           <div>
             <h4 className="text-white font-bold mb-3">Company</h4>
@@ -20,8 +22,12 @@ const Footer = () => {
           <div>
             <h4 className="text-white font-bold mb-3">Resources</h4>
             <ul className="space-y-2 text-sm">
-              <li className="hover:text-purple-300 cursor-pointer">Documentation</li>
-              <li className="hover:text-purple-300 cursor-pointer">Help Center</li>
+              <li className="hover:text-purple-300 cursor-pointer">
+                Documentation
+              </li>
+              <li className="hover:text-purple-300 cursor-pointer">
+                Help Center
+              </li>
               <li className="hover:text-purple-300 cursor-pointer">Pricing</li>
             </ul>
           </div>
@@ -30,7 +36,9 @@ const Footer = () => {
             <ul className="space-y-2 text-sm">
               <li className="hover:text-purple-300 cursor-pointer">Twitter</li>
               <li className="hover:text-purple-300 cursor-pointer">LinkedIn</li>
-              <li className="hover:text-purple-300 cursor-pointer">Contact Us</li>
+              <li className="hover:text-purple-300 cursor-pointer">
+                Contact Us
+              </li>
             </ul>
           </div>
         </div>
