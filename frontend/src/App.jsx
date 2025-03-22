@@ -7,6 +7,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import VerifyOTP from "./pages/VerifyOTP";
+import AllJob from "./pages/AllJob";
 // Import other pages as needed
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
               <Route path="/signup" element={<Signup />} />
               <Route path="/verify" element={<VerifyOTP />} />
               <Route path="/login" element={<Login />} />
+               <Route path="/all-jobs" element={<AllJob />} />
               {/* Add other routes */}
             </Routes>
           </main>
