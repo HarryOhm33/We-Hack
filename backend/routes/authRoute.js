@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const wrapAsync = require("../utils/wrapAsync");
-const { authenticate, isOrganizer } = require("../middleware/authenticate");
+const { authenticate } = require("../middleware/authenticate");
 
 const {
   signup,

@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
 
 const userSchema = new mongoose.Schema(
   {
@@ -8,13 +7,19 @@ const userSchema = new mongoose.Schema(
     password: { type: String, required: true },
     role: {
       type: String,
-      enum: ["admin", "organizer", "participant"],
-      default: "participant",
+      enum: ["candidate", "recruiter"],
+      default: "candidate",
+      required: true,
+    },
+    organization: {
+      type: String,
+      required: function () {
+        return this.role === "recruiter";
+      },
     },
     isVerified: { type: Boolean, default: false },
   },
   { timestamps: true } // Automatically adds createdAt and updatedAt
 );
 
-const User = mongoose.model("User", userSchema);
-module.exports = User;
+module.exports = mongoose.model("User", userSchema);

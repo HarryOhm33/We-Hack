@@ -10,7 +10,7 @@ const authenticate = async (req, res, next) => {
       return res.status(401).json({ message: "Unauthorized" });
     }
 
-    // ✅ Handle "Bearer " prefix if the token is sent in the Authorization header
+    // ✅ Handle "Bearer " prefix if present
     if (token.startsWith("Bearer ")) {
       token = token.slice(7, token.length);
     }
@@ -29,7 +29,7 @@ const authenticate = async (req, res, next) => {
         .json({ message: "Session expired, please log in again" });
     }
 
-    // ✅ Attach user details to request
+    // ✅ Attach user details to request (excluding password)
     req.user = await User.findById(decoded.id).select("-password");
     next();
   } catch (error) {
@@ -37,12 +37,4 @@ const authenticate = async (req, res, next) => {
   }
 };
 
-const isOrganizer = (req, res, next) => {
-  if (req.user.role === "organizer" || req.user.role === "admin") {
-    next();
-  } else {
-    res.status(403).json({ message: "Not authorized as organizer" });
-  }
-};
-
-module.exports = { authenticate, isOrganizer };
+module.exports = { authenticate };

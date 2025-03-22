@@ -6,34 +6,61 @@ const otpGenerator = require("otp-generator");
 const sendEmail = require("../utils/sendEmail");
 const OTP = require("../models/otp");
 
-module.exports.signup = async (req, res) => {
-  const { name, email, password } = req.body;
+exports.signup = async (req, res) => {
+  try {
+    const { name, email, password, role, organization } = req.body;
+    // console.log(req.body);
 
-  const existingUser = await User.findOne({ email });
-  if (existingUser)
-    return res.status(400).json({ message: "Email already exists" });
+    // ✅ Check if user already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: "Email already exists" });
+    }
 
-  // ✅ Generate OTP
-  const otp = otpGenerator.generate(6, {
-    digits: true,
-    upperCaseAlphabets: false, // ❌ Disable uppercase letters
-    lowerCaseAlphabets: false, // ❌ Disable lowercase letters
-    specialChars: false, // ❌ Disable special characters
-  });
+    // ✅ Validate role (default to 'candidate' if not provided)
+    const userRole = role || "candidate";
+    if (!["candidate", "recruiter"].includes(userRole)) {
+      return res.status(400).json({ message: "Invalid role selected" });
+    }
 
-  // ✅ delete old OTP if exists
-  await OTP.deleteOne({ email });
+    // ✅ If recruiter, ensure organization is provided
+    if (userRole === "recruiter" && !organization) {
+      return res
+        .status(400)
+        .json({ message: "Organization name is required for recruiters." });
+    }
 
-  // ✅ Send OTP via email
-  await sendEmail(email, "Verify Your Account", `Your OTP is ${otp}`);
+    // ✅ Generate OTP (6-digit numeric)
+    const otp = otpGenerator.generate(6, {
+      digits: true,
+      upperCaseAlphabets: false,
+      lowerCaseAlphabets: false,
+      specialChars: false,
+    });
 
-  // ✅ Temporarily store user details (hash password)
-  const hashedPassword = await bcrypt.hash(password, 10);
-  await OTP.create({ email, otp, name, password: hashedPassword });
+    // ✅ Remove any existing OTP for this email
+    await OTP.deleteOne({ email });
 
-  res
-    .status(200)
-    .json({ message: "OTP sent to email. Verify to complete signup." });
+    // ✅ Send OTP via email
+    await sendEmail(email, "Verify Your Account", `Your OTP is ${otp}`);
+
+    // ✅ Temporarily store user details (hash password)
+    const hashedPassword = await bcrypt.hash(password, 10);
+    await OTP.create({
+      email,
+      otp,
+      name,
+      password: hashedPassword,
+      role: userRole,
+      organization: userRole === "recruiter" ? organization : null,
+    });
+
+    res
+      .status(200)
+      .json({ message: "OTP sent to email. Verify to complete signup." });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
 
 module.exports.login = async (req, res) => {
@@ -82,25 +109,38 @@ module.exports.logout = async (req, res) => {
 };
 
 module.exports.verifyOTP = async (req, res) => {
-  const { email, otp } = req.body;
+  try {
+    const { email, otp } = req.body;
 
-  // ✅ Find OTP record
-  const storedOTP = await OTP.findOne({ email, otp });
-  if (!storedOTP)
-    return res.status(400).json({ message: "Invalid OTP or expired" });
+    // ✅ Find OTP record
+    const storedOTP = await OTP.findOne({ email, otp });
+    if (!storedOTP) {
+      return res.status(400).json({ message: "Invalid OTP or expired" });
+    }
 
-  // ✅ Create User with the ALREADY hashed password
-  await User.create({
-    name: storedOTP.name,
-    email,
-    password: storedOTP.password, // ✅ Now correct
-    isVerified: true,
-  });
+    // ✅ Create User with the ALREADY hashed password
+    const newUser = new User({
+      name: storedOTP.name,
+      email,
+      password: storedOTP.password, // ✅ Hashed password stored previously
+      role: storedOTP.role, // ✅ Preserve user role
+      isVerified: true,
+    });
 
-  // ✅ Delete OTP after successful verification
-  await OTP.deleteOne({ email });
+    // ✅ If recruiter, add organization field
+    if (storedOTP.role === "recruiter") {
+      newUser.organization = storedOTP.organization;
+    }
 
-  res.status(200).json({ message: "Signup successful. You can now log in." });
+    await newUser.save(); // ✅ Save user to DB
+
+    // ✅ Delete OTP after successful verification
+    await OTP.deleteOne({ email });
+
+    res.status(200).json({ message: "Signup successful. You can now log in." });
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
 };
 
 module.exports.resendOTP = async (req, res) => {

@@ -15,7 +15,7 @@ const port = process.env.PORT;
 const ExpressError = require("./utils/ExpressError");
 
 const authRoute = require("./routes/authRoute");
-const eventRoute = require("./routes/eventRoute");
+const jobRoute = require("./routes/jobRoute");
 
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
@@ -23,7 +23,7 @@ app.use(express.json());
 app.use(cookieParser()); // ✅ Middleware for handling cookies
 
 app.use("/api/auth", authRoute);
-app.use("/api/events", eventRoute);
+app.use("/api/jobs", jobRoute);
 
 app.all("*", (req, res, next) => {
   next(new ExpressError(404, "Page Not Found!!"));
