@@ -8,12 +8,14 @@ import Background from "../components/BackgroundAnimation";
 const ViewApplications = () => {
   const { jobId } = useParams();
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, isAuthenticating } = useAuth();
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    if (isAuthenticating) return;
+
     if (!user || user?.role !== "recruiter") {
       navigate("/");
       return;
@@ -39,9 +41,9 @@ const ViewApplications = () => {
     };
 
     fetchApplications();
-  }, [jobId, user, navigate]);
+  }, [jobId, user, navigate, isAuthenticating]);
 
-  if (loading) {
+  if (isAuthenticating || loading) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500"></div>
@@ -64,7 +66,7 @@ const ViewApplications = () => {
             </h1>
             <button
               onClick={() => navigate("/recruiter-dashboard")}
-              className="bg-gray-800 hover:bg-gray-700 px-4 py-2 rounded-lg transition-colors"
+              className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-6 py-2 rounded-lg hover:opacity-90 transition-all"
             >
               Back to Dashboard
             </button>
