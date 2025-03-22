@@ -1,3 +1,4 @@
+import os
 import re
 import joblib
 import string
@@ -5,6 +6,7 @@ import numpy as np
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.preprocessing import MinMaxScaler
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 import nltk
@@ -27,6 +29,9 @@ data = pd.DataFrame({
 
 # Preprocessing function
 def clean_text(text):
+    nltk.download("stopwords", quiet=True)  # Ensure stopwords are downloaded
+    nltk.download("punkt", quiet=True)
+
     text = text.lower()
     text = re.sub(f"[{string.punctuation}]", "", text)
     tokens = word_tokenize(text)
@@ -40,14 +45,20 @@ vectorizer = TfidfVectorizer()
 X_text = vectorizer.fit_transform(data["cleanedCoverLetter"])
 X_score = np.array(data["score"]).reshape(-1, 1)
 
-X = np.hstack((X_text.toarray(), X_score))
+# Normalize score
+scaler = MinMaxScaler()
+X_score_scaled = scaler.fit_transform(X_score)  # Normalize between 0 and 1
+
+X = np.hstack((X_text.toarray(), X_score_scaled))
 y = data["label"]
 
 # Train ML model
-clf = RandomForestClassifier()
+clf = RandomForestClassifier(random_state=42)  # Set random state for reproducibility
 clf.fit(X, y)
 
 # Save model
-joblib.dump((clf, vectorizer), "ml_model/model.pkl")
+model_path = "ml_model/model.pkl"
+os.makedirs(os.path.dirname(model_path), exist_ok=True)  # Ensure directory exists
+joblib.dump((clf, vectorizer, scaler), model_path)
 
-print("✅ ML Model Trained & Saved as `ml_model/model.pkl`")
+print("ML Model Trained & Saved as `ml_model/model.pkl`")

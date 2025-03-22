@@ -1,0 +1,10 @@
+services:
+  - name: ml-api
+    type: web
+    env: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "./start.sh"
+    plan: free
+    envVars:
+      - key: PORT
+        value: 10000

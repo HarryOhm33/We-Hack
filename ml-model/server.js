@@ -1,45 +1,28 @@
 const express = require("express");
 const cors = require("cors");
-const bodyParser = require("body-parser");
-const { PythonShell } = require("python-shell");
+const mlRoutes = require("./ml_model/api");
 
 const app = express();
 app.use(cors());
-app.use(bodyParser.json());
+app.use(express.json()); // Use built-in JSON parser
 
-app.post("/predict", async (req, res) => {
-  const { score, coverLetter } = req.body;
+// Debugging middleware to log requests
+app.use((req, res, next) => {
+  console.log(`📥 Incoming Request: ${req.method} ${req.url}`);
+  next();
+});
 
-  // Ensure input is valid
-  if (!score || !coverLetter) {
-    return res
-      .status(400)
-      .json({ message: "Score and cover letter are required." });
-  }
+app.use("/ml", mlRoutes); // Load ML Routes
 
-  // Run Python script
-  let options = {
-    mode: "text",
-    pythonOptions: ["-u"],
-    scriptPath: "./ml_model",
-    pythonPath: "./ml_model/venv/bin/python", // Linux/macOS
-    // pythonPath: "./ml_model/venv/Scripts/python.exe", // Windows
-    args: [score, coverLetter],
-  };
-
-  PythonShell.run("model.py", options, function (err, results) {
-    if (err)
-      return res
-        .status(500)
-        .json({ message: "Error running ML model", error: err.message });
-
-    // Results from Python
-    const prediction = results[0];
-    res.json({ prediction });
-  });
+// Global error handler
+app.use((err, req, res, next) => {
+  console.error("🔥 Server Error:", err);
+  res
+    .status(err.status || 500)
+    .json({ message: err.message || "Internal Server Error" });
 });
 
 const PORT = 5000;
 app.listen(PORT, () =>
-  console.log(`🚀 ML API running on http://localhost:${PORT}`)
+  console.log(`🚀 Server running on http://localhost:${PORT}`)
 );
