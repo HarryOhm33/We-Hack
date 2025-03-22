@@ -2,14 +2,77 @@ const Job = require("../models/job");
 const Application = require("../models/application");
 
 exports.postJob = async (req, res) => {
-  if (req.user.role !== "recruiter") {
-    return res.status(403).json({ message: "Only recruiters can post jobs" });
+  try {
+    if (!req.user || req.user.role !== "recruiter") {
+      return res.status(403).json({ message: "Only recruiters can post jobs" });
+    }
+
+    const {
+      title,
+      description,
+      skillsRequired,
+      location,
+      salaryRange,
+      assessmentRequired,
+      assessmentQuestions,
+      minimumScore,
+    } = req.body;
+
+    // Basic validation
+    if (
+      !title ||
+      !description ||
+      !skillsRequired ||
+      !location ||
+      !salaryRange
+    ) {
+      return res
+        .status(400)
+        .json({ message: "All required fields must be provided." });
+    }
+
+    // Validate assessment questions if assessmentRequired is true
+    if (assessmentRequired) {
+      if (!assessmentQuestions || assessmentQuestions.length === 0) {
+        return res.status(400).json({
+          message:
+            "Assessment questions are required if assessment is enabled.",
+        });
+      }
+
+      for (const question of assessmentQuestions) {
+        if (
+          !question.question ||
+          !question.options ||
+          question.options.length < 2 ||
+          !question.correctAnswer
+        ) {
+          return res.status(400).json({
+            message:
+              "Each assessment question must have a question, at least two options, and a correct answer.",
+          });
+        }
+      }
+    }
+
+    const newJob = new Job({
+      title,
+      description,
+      skillsRequired,
+      location,
+      salaryRange,
+      assessmentRequired,
+      assessmentQuestions: assessmentRequired ? assessmentQuestions : [],
+      minimumScore: assessmentRequired ? minimumScore : 0,
+      postedBy: req.user.id,
+    });
+
+    await newJob.save();
+    res.status(200).json({ message: "Job posted successfully!", job: newJob });
+  } catch (error) {
+    console.error("Error posting job:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
   }
-
-  const job = new Job({ ...req.body, postedBy: req.user.id });
-  await job.save();
-
-  res.status(201).json({ message: "Job posted successfully!" });
 };
 
 exports.getAllJobs = async (req, res) => {

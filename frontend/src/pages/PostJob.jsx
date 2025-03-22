@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import toast from "react-hot-toast";
 import Background from "../components/BackgroundAnimation";
+import { FiPlus, FiX, FiChevronDown, FiChevronUp } from "react-icons/fi";
 
 const PostJob = () => {
   const { user } = useAuth();
@@ -14,8 +15,12 @@ const PostJob = () => {
     skillsRequired: [],
     location: "",
     salaryRange: "",
+    assessmentRequired: false,
+    assessmentQuestions: [],
+    minimumScore: 0,
   });
   const [currentSkill, setCurrentSkill] = useState("");
+  const [expandedQuestion, setExpandedQuestion] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,6 +32,14 @@ const PostJob = () => {
       !formData.salaryRange
     ) {
       toast.error("Please fill in all required fields");
+      return;
+    }
+
+    if (
+      formData.assessmentRequired &&
+      formData.assessmentQuestions.length === 0
+    ) {
+      toast.error("Please add at least one assessment question");
       return;
     }
 
@@ -56,6 +69,7 @@ const PostJob = () => {
     }
   };
 
+  // Skill handling
   const handleAddSkill = () => {
     const skill = currentSkill.trim();
     if (skill && !formData.skillsRequired.includes(skill)) {
@@ -76,134 +90,340 @@ const PostJob = () => {
     });
   };
 
+  // Assessment handling
+  const toggleAssessment = () => {
+    setFormData({
+      ...formData,
+      assessmentRequired: !formData.assessmentRequired,
+      assessmentQuestions: !formData.assessmentRequired
+        ? []
+        : formData.assessmentQuestions,
+      minimumScore: !formData.assessmentRequired ? 0 : formData.minimumScore,
+    });
+  };
+
+  const addQuestion = () => {
+    const newQuestions = [
+      ...formData.assessmentQuestions,
+      {
+        question: "",
+        options: ["", "", "", ""],
+        correctAnswer: "",
+      },
+    ];
+    setFormData({ ...formData, assessmentQuestions: newQuestions });
+    setExpandedQuestion(newQuestions.length - 1);
+  };
+
+  const updateQuestion = (index, field, value) => {
+    const updatedQuestions = [...formData.assessmentQuestions];
+    updatedQuestions[index][field] = value;
+    setFormData({ ...formData, assessmentQuestions: updatedQuestions });
+  };
+
+  const updateOption = (qIndex, oIndex, value) => {
+    const updatedQuestions = [...formData.assessmentQuestions];
+    updatedQuestions[qIndex].options[oIndex] = value;
+    setFormData({ ...formData, assessmentQuestions: updatedQuestions });
+  };
+
+  const removeQuestion = (index) => {
+    const updatedQuestions = formData.assessmentQuestions.filter(
+      (_, i) => i !== index
+    );
+    setFormData({ ...formData, assessmentQuestions: updatedQuestions });
+    setExpandedQuestion(null);
+  };
+
   return (
-    <div className="relative flex items-center justify-center min-h-screen bg-black overflow-hidden pt-20">
+    <div className="relative min-h-screen bg-black overflow-hidden">
       <Background />
 
-      <div className="bg-gray-900 text-white p-6 rounded-2xl shadow-xl w-full max-w-md border border-gray-700 relative z-10 flex flex-col items-center overflow-hidden">
-        <div className="absolute top-0 left-0 w-24 h-24 bg-gradient-to-br from-purple-500 to-pink-500 rounded-br-full opacity-50"></div>
-        <div className="absolute top-0 right-0 w-16 h-16 bg-yellow-500 rounded-bl-full opacity-50"></div>
+      <div className="container mx-auto px-10 py-20 relative z-10">
+        <div className="bg-gray-900/80 backdrop-blur-md rounded-3xl p-8 border border-gray-700 shadow-xl">
+          <h2 className="text-4xl font-bold mb-8 text-pink-400 text-center">
+            Post New Job Opportunity
+          </h2>
 
-        <h2 className="text-3xl font-bold mb-4 text-pink-400 relative z-20 text-center w-full">
-          Post New Job
-        </h2>
+          <form
+            onSubmit={handleSubmit}
+            className="grid grid-cols-1 lg:grid-cols-2 gap-8"
+          >
+            {/* Left Column - Job Details */}
+            <div className="space-y-6">
+              <div>
+                <label className="block text-gray-300 mb-2 text-lg font-medium">
+                  Job Title
+                </label>
+                <input
+                  type="text"
+                  value={formData.title}
+                  onChange={(e) =>
+                    setFormData({ ...formData, title: e.target.value })
+                  }
+                  placeholder="Senior React Developer"
+                  className="w-full px-4 py-3 rounded-xl bg-gray-800 border border-gray-700 focus:border-pink-500 focus:ring-2 focus:ring-pink-400 outline-none transition-all placeholder:text-gray-300 text-white"
+                  required
+                />
+              </div>
 
-        <form
-          onSubmit={handleSubmit}
-          className="space-y-4 relative z-20 w-full flex flex-col items-center"
-        >
-          <div className="w-full">
-            <label className="block text-gray-300 mb-1 text-sm">
-              Job Title
-            </label>
-            <input
-              type="text"
-              name="title"
-              value={formData.title}
-              onChange={(e) =>
-                setFormData({ ...formData, title: e.target.value })
-              }
-              placeholder="Software Engineer"
-              className="w-full px-3 py-2 rounded-lg bg-gray-800 border border-gray-700 focus:border-pink-500 focus:ring-2 focus:ring-pink-400 outline-none text-sm"
-              required
-            />
-          </div>
+              <div>
+                <label className="block text-gray-300 mb-2 text-lg font-medium">
+                  Location
+                </label>
+                <input
+                  type="text"
+                  value={formData.location}
+                  onChange={(e) =>
+                    setFormData({ ...formData, location: e.target.value })
+                  }
+                  placeholder="Remote, Worldwide"
+                  className="w-full px-4 py-3 rounded-xl bg-gray-800 border border-gray-700 focus:border-pink-500 focus:ring-2 focus:ring-pink-400 outline-none transition-all placeholder:text-gray-300 text-white"
+                  required
+                />
+              </div>
 
-          <div className="w-full">
-            <label className="block text-gray-300 mb-1 text-sm">
-              Description
-            </label>
-            <textarea
-              name="description"
-              value={formData.description}
-              onChange={(e) =>
-                setFormData({ ...formData, description: e.target.value })
-              }
-              placeholder="Detailed job description..."
-              className="w-full px-3 py-2 rounded-lg bg-gray-800 border border-gray-700 focus:border-pink-500 focus:ring-2 focus:ring-pink-400 outline-none h-24 resize-none text-sm"
-              required
-            />
-          </div>
+              <div>
+                <label className="block text-gray-300 mb-2 text-lg font-medium">
+                  Salary Range
+                </label>
+                <input
+                  type="text"
+                  value={formData.salaryRange}
+                  onChange={(e) =>
+                    setFormData({ ...formData, salaryRange: e.target.value })
+                  }
+                  placeholder="₹7,00,000 - ₹12,00,000 per annum"
+                  className="w-full px-4 py-3 rounded-xl bg-gray-800 border border-gray-700 focus:border-pink-500 focus:ring-2 focus:ring-pink-400 outline-none transition-all placeholder:text-gray-300 text-white"
+                  required
+                />
+              </div>
 
-          <div className="w-full">
-            <label className="block text-gray-300 mb-1 text-sm">
-              Skills Required
-            </label>
-            <div className="flex items-center space-x-2">
-              <input
-                type="text"
-                value={currentSkill}
-                onChange={(e) => setCurrentSkill(e.target.value)}
-                placeholder="Enter skill"
-                className="w-full px-3 py-2 rounded-lg bg-gray-800 border border-gray-700 focus:border-pink-500 focus:ring-2 focus:ring-pink-400 outline-none text-sm"
-              />
-              <button
-                type="button"
-                onClick={handleAddSkill}
-                className="bg-purple-500 text-white px-3 py-2 rounded-lg text-sm"
-              >
-                Add
-              </button>
-            </div>
-            <div className="flex flex-wrap gap-2 mt-2">
-              {formData.skillsRequired.map((skill) => (
-                <span
-                  key={skill}
-                  className="bg-purple-500 text-white px-2 py-1 rounded-full text-xs flex items-center"
-                >
-                  {skill}
+              <div>
+                <label className="block text-gray-300 mb-2 text-lg font-medium">
+                  Skills Required
+                </label>
+                <div className="flex gap-2 mb-2">
+                  <input
+                    type="text"
+                    value={currentSkill}
+                    onChange={(e) => setCurrentSkill(e.target.value)}
+                    placeholder="React, Node.js, TypeScript"
+                    className="flex-1 px-4 py-3 rounded-xl bg-gray-800 border border-gray-700 focus:border-pink-500 focus:ring-2 focus:ring-pink-400 outline-none transition-all placeholder:text-gray-300 text-white"
+                    onKeyPress={(e) => e.key === "Enter" && handleAddSkill()}
+                  />
                   <button
                     type="button"
-                    onClick={() => removeSkill(skill)}
-                    className="ml-1 hover:text-pink-200"
+                    onClick={handleAddSkill}
+                    className="bg-pink-500 hover:bg-pink-600 text-white px-4 py-3 rounded-xl transition-colors font-medium"
                   >
-                    ×
+                    Add
                   </button>
-                </span>
-              ))}
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {formData.skillsRequired.map((skill) => (
+                    <span
+                      key={skill}
+                      className="bg-purple-500/20 text-purple-400 px-3 py-1 rounded-full flex items-center gap-1 text-sm"
+                    >
+                      {skill}
+                      <button
+                        type="button"
+                        onClick={() => removeSkill(skill)}
+                        className="text-purple-300 hover:text-purple-200 transition-colors"
+                      >
+                        <FiX className="w-4 h-4" />
+                      </button>
+                    </span>
+                  ))}
+                </div>
+              </div>
             </div>
-          </div>
 
-          <div className="w-full">
-            <label className="block text-gray-300 mb-1 text-sm">Location</label>
-            <input
-              type="text"
-              name="location"
-              value={formData.location}
-              onChange={(e) =>
-                setFormData({ ...formData, location: e.target.value })
-              }
-              placeholder="Remote"
-              className="w-full px-3 py-2 rounded-lg bg-gray-800 border border-gray-700 focus:border-pink-500 focus:ring-2 focus:ring-pink-400 outline-none text-sm"
-              required
-            />
-          </div>
+            {/* Right Column - Description & Assessment */}
+            <div className="space-y-6">
+              <div>
+                <label className="block text-gray-300 mb-2 text-lg font-medium">
+                  Job Description
+                </label>
+                <textarea
+                  value={formData.description}
+                  onChange={(e) =>
+                    setFormData({ ...formData, description: e.target.value })
+                  }
+                  placeholder="Detailed job description..."
+                  className="w-full h-48 px-4 py-3 rounded-xl bg-gray-800 border border-gray-700 focus:border-pink-500 focus:ring-2 focus:ring-pink-400 outline-none resize-none transition-all placeholder:text-gray-300 text-white"
+                  required
+                />
+              </div>
 
-          <div className="w-full">
-            <label className="block text-gray-300 mb-1 text-sm">
-              Salary Range
-            </label>
-            <input
-              type="text"
-              name="salaryRange"
-              value={formData.salaryRange}
-              onChange={(e) =>
-                setFormData({ ...formData, salaryRange: e.target.value })
-              }
-              placeholder="₹8,00,000 per year"
-              className="w-full px-3 py-2 rounded-lg bg-gray-800 border border-gray-700 focus:border-pink-500 focus:ring-2 focus:ring-pink-400 outline-none text-sm"
-              required
-            />
-          </div>
+              <div className="bg-gray-800/50 p-6 rounded-xl border border-gray-700">
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-gray-300 text-lg font-medium">
+                    Include Assessment?
+                  </span>
+                  <button
+                    type="button"
+                    onClick={toggleAssessment}
+                    className={`relative inline-flex h-7 w-14 items-center rounded-full transition-colors ${
+                      formData.assessmentRequired
+                        ? "bg-pink-500"
+                        : "bg-gray-600"
+                    }`}
+                  >
+                    <span
+                      className={`inline-block h-5 w-5 transform rounded-full bg-white transition-transform ${
+                        formData.assessmentRequired
+                          ? "translate-x-7"
+                          : "translate-x-1"
+                      }`}
+                    />
+                  </button>
+                </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white px-6 py-3 rounded-full text-sm font-semibold hover:opacity-80 transition-all shadow-md shadow-pink-500/50 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {loading ? "Posting Job..." : "Post Job"}
-          </button>
-        </form>
+                {formData.assessmentRequired && (
+                  <div className="space-y-6">
+                    <div className="space-y-4">
+                      {formData.assessmentQuestions.map((q, qIndex) => (
+                        <div
+                          key={qIndex}
+                          className="bg-gray-700/50 rounded-xl p-4 border border-gray-600"
+                        >
+                          <div className="flex justify-between items-center mb-3">
+                            <span className="text-gray-300 font-medium">
+                              Question {qIndex + 1}
+                            </span>
+                            <div className="flex gap-2">
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  setExpandedQuestion(
+                                    expandedQuestion === qIndex ? null : qIndex
+                                  )
+                                }
+                                className="text-pink-400 hover:text-pink-300 transition-colors"
+                              >
+                                {expandedQuestion === qIndex ? (
+                                  <FiChevronUp />
+                                ) : (
+                                  <FiChevronDown />
+                                )}
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => removeQuestion(qIndex)}
+                                className="text-red-400 hover:text-red-300 transition-colors"
+                              >
+                                <FiX />
+                              </button>
+                            </div>
+                          </div>
+
+                          {expandedQuestion === qIndex && (
+                            <div className="space-y-4">
+                              <input
+                                type="text"
+                                value={q.question}
+                                onChange={(e) =>
+                                  updateQuestion(
+                                    qIndex,
+                                    "question",
+                                    e.target.value
+                                  )
+                                }
+                                placeholder="Enter question text"
+                                className="w-full px-4 py-2 rounded-lg bg-gray-600 border border-gray-500 focus:border-pink-500 focus:ring-2 focus:ring-pink-400 outline-none transition-all placeholder:text-gray-300 text-white"
+                              />
+
+                              <div className="grid grid-cols-2 gap-3">
+                                {q.options.map((option, oIndex) => (
+                                  <input
+                                    key={oIndex}
+                                    type="text"
+                                    value={option}
+                                    onChange={(e) =>
+                                      updateOption(
+                                        qIndex,
+                                        oIndex,
+                                        e.target.value
+                                      )
+                                    }
+                                    placeholder={`Option ${oIndex + 1}`}
+                                    className="w-full px-3 py-2 rounded-lg bg-gray-600 border border-gray-500 focus:border-pink-500 focus:ring-2 focus:ring-pink-400 outline-none transition-all placeholder:text-gray-300 text-white"
+                                  />
+                                ))}
+                              </div>
+
+                              <select
+                                value={q.correctAnswer}
+                                onChange={(e) =>
+                                  updateQuestion(
+                                    qIndex,
+                                    "correctAnswer",
+                                    e.target.value
+                                  )
+                                }
+                                className="w-full px-4 py-2 rounded-lg bg-gray-600 border border-gray-500 focus:border-pink-500 focus:ring-2 focus:ring-pink-400 outline-none transition-all"
+                              >
+                                <option value="">Select Correct Answer</option>
+                                {q.options.map(
+                                  (option, oIndex) =>
+                                    option && (
+                                      <option key={oIndex} value={option}>
+                                        Option {oIndex + 1}
+                                      </option>
+                                    )
+                                )}
+                              </select>
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={addQuestion}
+                      className="w-full py-3 flex items-center justify-center gap-2 bg-pink-500 hover:bg-pink-600 rounded-xl transition-colors font-medium"
+                    >
+                      <FiPlus />
+                      Add Question
+                    </button>
+
+                    <div>
+                      <label className="block text-gray-300 mb-2 font-medium">
+                        Minimum Passing Score
+                      </label>
+                      <input
+                        type="number"
+                        min="0"
+                        value={formData.minimumScore}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            minimumScore: parseInt(e.target.value) || 0,
+                          })
+                        }
+                        className="w-full px-4 py-2 rounded-lg bg-gray-600 border border-gray-500 focus:border-pink-500 focus:ring-2 focus:ring-pink-400 outline-none transition-all placeholder:text-gray-300 text-white"
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Submit Button */}
+            <div className="lg:col-span-2">
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white px-8 py-4 rounded-xl text-xl font-bold hover:opacity-90 transition-all shadow-lg shadow-pink-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading ? "Publishing Job..." : "Publish Job Opportunity"}
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );

@@ -13,6 +13,17 @@ const jobSchema = new mongoose.Schema(
       required: true,
     },
     applicants: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }], // List of applicants
+
+    // Skill-based assessment fields
+    assessmentRequired: { type: Boolean, default: false }, // Whether test is needed
+    assessmentQuestions: [
+      {
+        question: { type: String, required: true },
+        options: [{ type: String, required: true }], // Multiple choices
+        correctAnswer: { type: String, required: true }, // Correct answer
+      },
+    ],
+    minimumScore: { type: Number, default: 0 }, // Minimum score to apply
   },
   { timestamps: true } // Automatically adds createdAt and updatedAt
 );
