@@ -15,11 +15,6 @@ const applicationSchema = new mongoose.Schema(
       default: "pending",
     },
     score: { type: String, default: null }, // Store candidate's assessment score
-    prediction: {
-      type: String,
-      enum: ["Fit", "Not Fit", "Moderate"],
-      default: "Moderate",
-    }, // Store ML prediction
   },
   { timestamps: true } // ✅ Adds createdAt & updatedAt
 );

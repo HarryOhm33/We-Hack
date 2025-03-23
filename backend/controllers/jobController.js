@@ -138,6 +138,7 @@ exports.applyForJob = async (req, res) => {
     const job = await Job.findById(req.params.jobId);
 
     if (!job) return res.status(404).json({ message: "Job not found" });
+
     if (req.user.role !== "candidate") {
       return res
         .status(403)
@@ -151,31 +152,20 @@ exports.applyForJob = async (req, res) => {
         .json({ message: "You have already applied for this job." });
     }
 
-    // ✅ Call ML Model API to get prediction
-    const mlResponse = await axios.post("http://localhost:5000/predict", {
-      score,
-      coverLetter,
-    });
-
-    const prediction = mlResponse.data.prediction; // "Fit" or "Not Fit"
-
     // ✅ Add applicant ID to job's `applicants` array
     job.applicants.push(req.user.id);
     await job.save();
 
-    // ✅ Save the application with ML prediction
+    // ✅ Save the application **(without prediction)**
     const application = new Application({
       job: req.params.jobId,
       candidate: req.user.id,
       coverLetter,
       score,
-      prediction,
     });
 
     await application.save();
-    res
-      .status(201)
-      .json({ message: "Application submitted successfully!", prediction });
+    res.status(201).json({ message: "Application submitted successfully!" });
   } catch (error) {
     console.error("Error applying for job:", error);
     res.status(500).json({ message: "Server error", error: error.message });
