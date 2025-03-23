@@ -13,6 +13,7 @@ import JobDetails from "./pages/JobDetails";
 import PostJob from "./pages/PostJob";
 import ViewApplications from "./pages/ViewApplications";
 import Assessment from "./pages/Assessment"; // Add this import
+import NotFound from "./components/NotFound";
 
 function App() {
   return (
@@ -40,6 +41,7 @@ function App() {
                 path="/:jobId/applications"
                 element={<ViewApplications />}
               />
+              <Route path="*" element={<NotFound />} />
             </Routes>
           </main>
 
