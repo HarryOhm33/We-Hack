@@ -98,6 +98,11 @@ const Assessment = () => {
 
     setIsSubmitting(true);
     try {
+      // Get token from localStorage
+      const token = localStorage.getItem("token");
+      if (!token)
+        throw new Error("Authentication failed. Please log in again.");
+
       // Calculate percentage score
       const totalQuestions = job.assessmentQuestions.length;
       const percentageScore = `${Math.round(
@@ -111,6 +116,7 @@ const Assessment = () => {
           credentials: "include",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // ✅ Include token in header
           },
           body: JSON.stringify({
             coverLetter,
