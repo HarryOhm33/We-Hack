@@ -45,14 +45,17 @@ const PostJob = () => {
 
     try {
       setLoading(true);
-      const response = await fetch("http://localhost:9001/api/jobs/", {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      const response = await fetch(
+        "https://we-hack-cc7h.onrender.com/api/jobs/",
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
 
       const data = await response.json();
 

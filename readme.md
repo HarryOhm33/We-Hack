@@ -119,9 +119,9 @@ npm run dev
 
 Contributions are welcome! Fork the repo and submit a PR.
 
-📩 _Contact:_ sakshikumarizen@gmail.com
+📩 _Contact:_ sakshikumarizen@gmail.com, hari333333om@gmail.com
 
 ---
 
-🎯 _Developed by Sakshi Kumari_  
+🎯 _Developed by Sakshi Kumari & Hari Om_  
 🚀 Skill-Based Hiring Platform - 2025

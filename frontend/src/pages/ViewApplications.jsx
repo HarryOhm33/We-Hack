@@ -25,7 +25,7 @@ const ViewApplications = () => {
     const fetchApplications = async () => {
       try {
         const response = await fetch(
-          `http://localhost:9001/api/jobs/${jobId}/applications`,
+          `https://we-hack-cc7h.onrender.com/api/jobs/${jobId}/applications`,
           { credentials: "include" }
         );
 
@@ -49,7 +49,7 @@ const ViewApplications = () => {
     setUpdatingStatus(applicationId);
     try {
       const response = await fetch(
-        `http://localhost:9001/api/jobs/${jobId}/applications/${applicationId}`,
+        `https://we-hack-cc7h.onrender.com/api/jobs/${jobId}/applications/${applicationId}`,
         {
           method: "PUT",
           headers: {

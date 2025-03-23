@@ -19,7 +19,7 @@ const jobRoute = require("./routes/jobRoute");
 // ✅ CORS Middleware (Fixes Cookies Not Storing Issue)
 app.use(
   cors({
-    origin: "http://localhost:5173", // Change this to your frontend URL
+    origin: ["http://localhost:5173", "https://easy-hire-seekers.netlify.app"], // Allow both local and deployed frontend
     credentials: true, // ✅ Important for sending cookies
   })
 );

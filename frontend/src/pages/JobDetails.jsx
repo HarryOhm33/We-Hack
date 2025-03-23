@@ -17,9 +17,12 @@ const JobDetails = () => {
   useEffect(() => {
     const fetchAllJobs = async () => {
       try {
-        const response = await fetch("http://localhost:9001/api/jobs/", {
-          credentials: "include",
-        });
+        const response = await fetch(
+          "https://we-hack-cc7h.onrender.com/api/jobs/",
+          {
+            credentials: "include",
+          }
+        );
 
         if (!response.ok) {
           throw new Error(`Failed to fetch jobs: ${response.status}`);

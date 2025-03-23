@@ -16,10 +16,9 @@ export function AuthProvider({ children }) {
       try {
         const storedUser = localStorage.getItem("user");
 
-        // Only run if there's a stored user and the user state hasn't been set yet in this session
-        if (storedUser && user === null) {
+        if (storedUser) {
           const response = await fetch(
-            "http://localhost:9001/api/auth/verify",
+            "https://we-hack-cc7h.onrender.com/api/auth/verify",
             {
               method: "GET",
               credentials: "include",
@@ -42,7 +41,7 @@ export function AuthProvider({ children }) {
     };
 
     initializeAuth();
-  }, [user]); // Depend on the user state
+  }, []); // Use an empty dependency array
 
   // 🔹 Clear user authentication storage
   const clearAuthStorage = () => {
@@ -83,10 +82,13 @@ export function AuthProvider({ children }) {
 
   // 🔹 Login function
   const login = async (email, password) => {
-    const data = await authRequest("http://localhost:9001/api/auth/login", {
-      email,
-      password,
-    });
+    const data = await authRequest(
+      "https://we-hack-cc7h.onrender.com/api/auth/login",
+      {
+        email,
+        password,
+      }
+    );
 
     localStorage.setItem("user", JSON.stringify(data.user));
     localStorage.setItem("token", data.token);
@@ -97,7 +99,7 @@ export function AuthProvider({ children }) {
   // 🔹 Signup function
   const signup = async (formData) => {
     const data = await authRequest(
-      "http://localhost:9001/api/auth/signup",
+      "https://we-hack-cc7h.onrender.com/api/auth/signup",
       formData
     );
     return data;
@@ -109,7 +111,7 @@ export function AuthProvider({ children }) {
     setIsAuthenticating(true);
     try {
       const data = await authRequest(
-        "http://localhost:9001/api/auth/verify-otp",
+        "https://we-hack-cc7h.onrender.com/api/auth/verify-otp",
         { email, otp }
       );
       return data; // Just return success, don't store credentials
@@ -121,7 +123,7 @@ export function AuthProvider({ children }) {
   // 🔹 Logout function
   const logout = async () => {
     try {
-      await fetch("http://localhost:9001/api/auth/logout", {
+      await fetch("https://we-hack-cc7h.onrender.com/api/auth/logout", {
         method: "POST",
         credentials: "include",
         headers: {
