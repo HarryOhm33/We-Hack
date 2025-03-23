@@ -6,8 +6,9 @@ This project is a _Skill-Based Hiring Platform_ designed to assess candidates ba
 
 ---
 
-## 🏗 Project Structure
+🏗 Project Structure
 
+📦 project-root/ # Main project directory
 │── backend/ # Server-side logic
 │ ├── config/ # Configuration files
 │ ├── controllers/ # Backend API logic
@@ -17,7 +18,8 @@ This project is a _Skill-Based Hiring Platform_ designed to assess candidates ba
 │ ├── utils/ # Helper functions
 │ ├── .env # Environment variables
 │ ├── server.js # Main backend server
-│ ├── package.json # Dependencies
+│ ├── package.json # Backend dependencies
+│ ├── render.yaml # Render configuration for backend deployment
 │
 │── frontend/ # Client-side application
 │ ├── public/ # Static files
@@ -31,7 +33,16 @@ This project is a _Skill-Based Hiring Platform_ designed to assess candidates ba
 │ ├── package.json # Frontend dependencies
 │ ├── vite.config.js # Vite configuration
 │
-│── ml-model/ # AI/ML model for hiring predictions (Future)
+│── ml-model-api/ # Separate repository for ML model
+│ ├── ml_model/ # ML model source code
+│ │ ├── main.py # FastAPI ML server
+│ │ ├── model.pkl # Trained ML model
+│ │ ├── requirements.txt # ML dependencies
+│ ├── render.yaml # Render configuration for ML model deployment
+│ ├── start.sh # Startup script
+│ ├── .gitignore # Ignore unnecessary files
+│ ├── README.md # ML Model documentation
+│
 │── README.md # Project documentation
 │── .gitignore # Git ignored files
 
