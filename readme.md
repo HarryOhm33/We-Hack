@@ -8,7 +8,6 @@ This project is a _Skill-Based Hiring Platform_ designed to assess candidates ba
 
 ## 🏗 Project Structure
 
-SKILLDEVELOPMENT/
 │── backend/ # Server-side logic
 │ ├── config/ # Configuration files
 │ ├── controllers/ # Backend API logic
