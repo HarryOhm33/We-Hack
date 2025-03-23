@@ -58,12 +58,18 @@ const ViewApplications = () => {
   const handleUpdateStatus = async (applicationId, status) => {
     setUpdatingStatus(applicationId);
     try {
+      // Get token from localStorage
+      const token = localStorage.getItem("token");
+      if (!token)
+        throw new Error("Authentication failed. Please log in again.");
+
       const response = await fetch(
         `https://we-hack-cc7h.onrender.com/api/jobs/${jobId}/applications/${applicationId}`,
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // ✅ Include token in header
           },
           body: JSON.stringify({ status }),
           credentials: "include",
