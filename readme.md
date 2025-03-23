@@ -1,8 +1,12 @@
 # 🚀 Skill-Based Hiring Platform
 
+**🌐 Website:** [https://easy-hire-seekers.netlify.app/](https://easy-hire-seekers.netlify.app/)
+
+---
+
 ## 📌 Overview
 
-This project is a **Skill-Based Hiring Platform** designed to assess candidates based on their practical skills instead of traditional resumes. It features **job postings, applications, candidate assessments, and recruiter dashboards**.
+This project is a _Skill-Based Hiring Platform_ designed to assess candidates based on their practical skills instead of traditional resumes. It features _job postings, applications, candidate assessments, and recruiter dashboards_.
 
 ---
 
@@ -43,33 +47,33 @@ This project is a **Skill-Based Hiring Platform** designed to assess candidates 
 ## ⚡ Features
 
 ✅ **User Authentication** (Signup/Login) 🔐  
-✅ **Recruiter Dashboard** (Post jobs, manage applications) 🏢  
-✅ **Candidate Dashboard** (Browse jobs, apply) 🎯  
-✅ **Email Notifications** (Job status updates) ✉️
+✅ **Recruiter Dashboard** (Post jobs, manage applications) 🎯  
+✅ **Candidate Dashboard** (Browse jobs, apply) 👨‍💻  
+✅ **Email Notifications** (Job status updates) 📩
 
 ---
 
 ## 🚀 Tech Stack
 
-### 🖥️ Frontend
+### 🖥 _Frontend_
 
 - ⚛ **React.js**
 - 🎨 **Tailwind CSS**
-- 🔄 **Context API**
+- 🌐 **Context API**
 - ⚡ **Vite**
 
-### 🛠 Backend
+### 🛠 _Backend_
 
-- 🟢 **Node.js, Express.js**
-- 🗄 **MongoDB (Database)**
-- 🔑 **JWT (Authentication)**
-- 📩 **Nodemailer (Emails)**
+- 🚀 **Node.js, Express.js**
+- 🛢 **MongoDB** (Database)
+- 🔑 **JWT** (Authentication)
+- 📧 **Nodemailer** (Emails)
 
 ---
 
 ## 🛠 Installation & Setup
 
-### 📌 Backend
+### 🎯 _Backend_
 
 ```sh
 cd backend
@@ -77,7 +81,7 @@ npm install
 npm start
 ```
 
-### 📌 Frontend
+### 🎯 _Frontend_
 
 ```sh
 cd frontend
@@ -89,18 +93,18 @@ npm run dev
 
 ## 📌 API Endpoints
 
-### 🔐 Authentication
+### 🔑 _Authentication_
 
 - `POST /api/auth/signup` → Register user
 - `POST /api/auth/login` → User login
 
-### 💼 Jobs
+### 📌 _Jobs_
 
 - `POST /api/jobs` → Create a job
 - `GET /api/jobs` → Get job listings
 - `GET /api/jobs/:id` → Get job details
 
-### 📄 Applications
+### 📩 _Applications_
 
 - `POST /api/jobs/:jobId/apply` → Apply for a job
 - `GET /api/jobs/:jobId/applications` → View applications
@@ -108,27 +112,27 @@ npm run dev
 
 ---
 
-## 🔮 Future Enhancements
+## 📌 Future Enhancements
 
 🚀 **Real-time chat** between recruiters and applicants 💬  
-🚀 **Smart job recommendations** based on skills 🤖
+🚀 **Smart job recommendations** 🤖
 
 ---
 
-## 🌍 Deployment
+## 🔥 Deployment
 
-- **Frontend Deployed on**: [Netlify](https://easy-hire-seekers.netlify.app/) 🌐
-- **Backend Deployed on**: [Render](https://render.com/) 🔄
+- **Frontend** is deployed on **Netlify** 🚀
+- **Backend** is deployed on **Render** ☁
 
 ---
 
 ## 🤝 Contributing
 
-Contributions are welcome! Fork the repo and submit a PR.
+Contributions are welcome! Fork the repo and submit a PR. 🛠
 
-📩 **Contact:** sakshikumarizen@gmail.com, hari333333om@gmail.com
+📩 _Contact:_ **sakshikumarizen@gmail.com, hari333333om@gmail.com**
 
 ---
 
-🎯 **Developed by Sakshi Kumari & Hari Om**  
-🚀 **Skill-Based Hiring Platform - 2025**
+🎯 _Developed by **Sakshi Kumari & Hari Om**_  
+🚀 Skill-Based Hiring Platform - 2025
