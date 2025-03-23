@@ -15,13 +15,17 @@ export function AuthProvider({ children }) {
     const initializeAuth = async () => {
       try {
         const storedUser = localStorage.getItem("user");
+        const token = localStorage.getItem("token");
 
-        if (storedUser) {
+        if (storedUser && token) {
           const response = await fetch(
             "https://we-hack-cc7h.onrender.com/api/auth/verify",
             {
               method: "GET",
               credentials: "include",
+              headers: {
+                Authorization: `Bearer ${token}`, // ✅ Send token in header
+              },
             }
           );
 
@@ -41,7 +45,7 @@ export function AuthProvider({ children }) {
     };
 
     initializeAuth();
-  }, []); // Use an empty dependency array
+  }, []);
 
   // 🔹 Clear user authentication storage
   const clearAuthStorage = () => {
@@ -56,11 +60,14 @@ export function AuthProvider({ children }) {
     setError(null);
 
     try {
+      const token = localStorage.getItem("token"); // ✅ Get token
+
       const response = await fetch(url, {
         method,
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
+          Authorization: token ? `Bearer ${token}` : "", // ✅ Send token
         },
         body: JSON.stringify(body),
       });
@@ -106,7 +113,6 @@ export function AuthProvider({ children }) {
   };
 
   // 🔹 OTP Verification function
-  // AuthContext.jsx - Updated verifyOTP function
   const verifyOTP = async (email, otp) => {
     setIsAuthenticating(true);
     try {
@@ -114,7 +120,7 @@ export function AuthProvider({ children }) {
         "https://we-hack-cc7h.onrender.com/api/auth/verify-otp",
         { email, otp }
       );
-      return data; // Just return success, don't store credentials
+      return data;
     } finally {
       setIsAuthenticating(false);
     }
@@ -123,11 +129,13 @@ export function AuthProvider({ children }) {
   // 🔹 Logout function
   const logout = async () => {
     try {
+      const token = localStorage.getItem("token"); // ✅ Fetch token
+
       await fetch("https://we-hack-cc7h.onrender.com/api/auth/logout", {
         method: "POST",
         credentials: "include",
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Authorization: token ? `Bearer ${token}` : "", // ✅ Send token
           "Content-Type": "application/json",
         },
       });

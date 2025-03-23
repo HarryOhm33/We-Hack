@@ -100,9 +100,10 @@ module.exports.login = async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 
-    // ✅ Return important user details
+    // ✅ Return token in response along with user details
     res.status(200).json({
       message: "Login successful",
+      token, // Sending token in response
       user: {
         id: user._id,
         name: user.name,

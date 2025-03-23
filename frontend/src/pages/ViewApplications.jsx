@@ -24,9 +24,19 @@ const ViewApplications = () => {
 
     const fetchApplications = async () => {
       try {
+        const token = localStorage.getItem("token"); // 🔹 Get token from localStorage
+        if (!token) throw new Error("No authentication token found");
+
         const response = await fetch(
           `https://we-hack-cc7h.onrender.com/api/jobs/${jobId}/applications`,
-          { credentials: "include" }
+          {
+            method: "GET",
+            credentials: "include",
+            headers: {
+              Authorization: `Bearer ${token}`, // 🔹 Send token in Authorization header
+              "Content-Type": "application/json",
+            },
+          }
         );
 
         if (!response.ok) throw new Error("Failed to fetch applications");

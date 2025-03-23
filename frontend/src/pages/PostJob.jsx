@@ -45,12 +45,16 @@ const PostJob = () => {
 
     try {
       setLoading(true);
+
+      const token = localStorage.getItem("token"); // ✅ Fetch token
+
       const response = await fetch(
         "https://we-hack-cc7h.onrender.com/api/jobs/",
         {
           method: "POST",
           credentials: "include",
           headers: {
+            Authorization: token ? `Bearer ${token}` : "", // ✅ Send token
             "Content-Type": "application/json",
           },
           body: JSON.stringify(formData),
