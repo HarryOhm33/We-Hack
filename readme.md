@@ -1,13 +1,8 @@
 # 🚀 Skill-Based Hiring Platform
 
-![Skill-Based Hiring](https://via.placeholder.com/1000x300?text=Skill-Based+Hiring+Platform)
-
 ## 📌 Overview
 
 This project is a **Skill-Based Hiring Platform** designed to assess candidates based on their practical skills instead of traditional resumes. It features **job postings, applications, candidate assessments, and recruiter dashboards**.
-
-🌐 **Website URL:** [Easy Hire Seekers](https://easy-hire-seekers.netlify.app/)  
-🖥 **Backend Deployed on Render** | 🎨 **Frontend Deployed on Netlify**
 
 ---
 
@@ -48,9 +43,9 @@ This project is a **Skill-Based Hiring Platform** designed to assess candidates 
 ## ⚡ Features
 
 ✅ **User Authentication** (Signup/Login) 🔐  
-✅ **Recruiter Dashboard** (Post jobs, manage applications) 📊  
-✅ **Candidate Dashboard** (Browse jobs, apply) 👨‍💼  
-✅ **Email Notifications** (Job status updates) 📩
+✅ **Recruiter Dashboard** (Post jobs, manage applications) 🏢  
+✅ **Candidate Dashboard** (Browse jobs, apply) 🎯  
+✅ **Email Notifications** (Job status updates) ✉️
 
 ---
 
@@ -60,21 +55,21 @@ This project is a **Skill-Based Hiring Platform** designed to assess candidates 
 
 - ⚛ **React.js**
 - 🎨 **Tailwind CSS**
-- 🌍 **Context API**
+- 🔄 **Context API**
 - ⚡ **Vite**
 
-### 💾 Backend
+### 🛠 Backend
 
 - 🟢 **Node.js, Express.js**
-- 🗄 **MongoDB** (Database)
-- 🔑 **JWT Authentication**
-- 📧 **Nodemailer** (Emails)
+- 🗄 **MongoDB (Database)**
+- 🔑 **JWT (Authentication)**
+- 📩 **Nodemailer (Emails)**
 
 ---
 
 ## 🛠 Installation & Setup
 
-### Backend
+### 📌 Backend
 
 ```sh
 cd backend
@@ -82,7 +77,7 @@ npm install
 npm start
 ```
 
-### Frontend
+### 📌 Frontend
 
 ```sh
 cd frontend
@@ -113,10 +108,17 @@ npm run dev
 
 ---
 
-## 📌 Future Enhancements
+## 🔮 Future Enhancements
 
 🚀 **Real-time chat** between recruiters and applicants 💬  
-🚀 **Smart job recommendations** using AI 🤖
+🚀 **Smart job recommendations** based on skills 🤖
+
+---
+
+## 🌍 Deployment
+
+- **Frontend Deployed on**: [Netlify](https://easy-hire-seekers.netlify.app/) 🌐
+- **Backend Deployed on**: [Render](https://render.com/) 🔄
 
 ---
 
@@ -124,10 +126,9 @@ npm run dev
 
 Contributions are welcome! Fork the repo and submit a PR.
 
-📩 **Contact:** sakshikumarizen@gmail.com | hari333333om@gmail.com
+📩 **Contact:** sakshikumarizen@gmail.com, hari333333om@gmail.com
 
 ---
 
-### 🎯 Developed by **Sakshi Kumari & Hari Om**
-
+🎯 **Developed by Sakshi Kumari & Hari Om**  
 🚀 **Skill-Based Hiring Platform - 2025**
